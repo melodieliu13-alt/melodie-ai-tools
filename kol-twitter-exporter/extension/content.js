@@ -5,7 +5,7 @@
   'use strict';
 
   const APP = 'kol-signal-exporter-v1';
-  const VERSION = '2.8';
+  const VERSION = '2.9';
   const DB_NAME = 'kolSignalExportDb';
   const DB_STORE = 'handles';
   const DIR_KEY = 'kolLibraryDir';
@@ -477,7 +477,8 @@
 
   async function writeMerged(dir, kolName, month, sourceUrl, newTweets) {
     const folder = await withRetry(() => dir.getDirectoryHandle(safeFileName(kolName), { create: true }), '打开KOL文件夹');
-    const filename = `${month}.md`;
+    // 文件名自带月份+handle，即使脱离文件夹单独看也知道是谁的——不依赖文件夹名才能辨认
+    const filename = `${month}_${safeFileName(kolName)}.md`;
     let existingContent = '';
     try {
       const handle = await folder.getFileHandle(filename, { create: false });
@@ -565,7 +566,7 @@
     try {
       const kolDetailDir = await getKolDetailDir(dir);
       const result = await writeMerged(kolDetailDir, kolName, month, sourceUrl, tweets);
-      setStatus(`✅ 完成\n@${kolName} → ${dir.name}/KOL详情/${safeFileName(kolName)}/${month}.md\n本次新增 ${result.added} 条，文件累计 ${result.total} 条。`);
+      setStatus(`✅ 完成\n@${kolName} → ${dir.name}/KOL详情/${safeFileName(kolName)}/${month}_${safeFileName(kolName)}.md\n本次新增 ${result.added} 条，文件累计 ${result.total} 条。`);
     } catch (err) {
       const isFolderStale = /打开KOL文件夹/.test(err.message);
       const hint = isFolderStale
