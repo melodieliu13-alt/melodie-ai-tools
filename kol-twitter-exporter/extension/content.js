@@ -5,7 +5,7 @@
   'use strict';
 
   const APP = 'kol-signal-exporter-v1';
-  const VERSION = '2.7';
+  const VERSION = '2.8';
   const DB_NAME = 'kolSignalExportDb';
   const DB_STORE = 'handles';
   const DIR_KEY = 'kolLibraryDir';
@@ -47,7 +47,7 @@
       <div style="border-top:1px solid #e2e8f0;margin-top:2px;padding-top:8px;font-size:11px;color:#64748b;">关注列表分析（先打开 你的handle/following 页面）</div>
       <button id="${APP}-following-btn" style="${buttonStyle('#7c3aed')}">③ 抓取当前关注列表</button>
       <button id="${APP}-sample-btn" style="${buttonStyle('#0891b2')}">④ 批量抓取关注者内容样本</button>
-      <div style="border-top:1px solid #e2e8f0;margin-top:2px;padding-top:8px;font-size:11px;color:#64748b;">核心KOL整月存档（先点①选好文件夹，且该文件夹的_关注列表/下要有 优先抓取名单.json）</div>
+      <div style="border-top:1px solid #e2e8f0;margin-top:2px;padding-top:8px;font-size:11px;color:#64748b;">核心KOL整月存档（先点①选好文件夹，且该文件夹的关注列表/下要有 优先抓取名单.json）</div>
       <button id="${APP}-archive-btn" style="${buttonStyle('#c2410c')}">⑤ 批量抓取优先名单整月存档</button>
       <button id="${APP}-stop-btn" style="${buttonStyle('#dc2626')}">停止</button>
       <div id="${APP}-status" style="
@@ -470,6 +470,11 @@
     throw wrapped;
   }
 
+  async function getKolDetailDir(dir) {
+    // KOL情报库/根下分两个并列文件夹：KOL详情(实际抓到的KOL内容) + 关注列表(筛选哪些人值得抓的分析)
+    return withRetry(() => dir.getDirectoryHandle('KOL详情', { create: true }), '打开KOL详情文件夹');
+  }
+
   async function writeMerged(dir, kolName, month, sourceUrl, newTweets) {
     const folder = await withRetry(() => dir.getDirectoryHandle(safeFileName(kolName), { create: true }), '打开KOL文件夹');
     const filename = `${month}.md`;
@@ -558,8 +563,9 @@
     }
 
     try {
-      const result = await writeMerged(dir, kolName, month, sourceUrl, tweets);
-      setStatus(`✅ 完成\n@${kolName} → ${dir.name}/${safeFileName(kolName)}/${month}.md\n本次新增 ${result.added} 条，文件累计 ${result.total} 条。`);
+      const kolDetailDir = await getKolDetailDir(dir);
+      const result = await writeMerged(kolDetailDir, kolName, month, sourceUrl, tweets);
+      setStatus(`✅ 完成\n@${kolName} → ${dir.name}/KOL详情/${safeFileName(kolName)}/${month}.md\n本次新增 ${result.added} 条，文件累计 ${result.total} 条。`);
     } catch (err) {
       const isFolderStale = /打开KOL文件夹/.test(err.message);
       const hint = isFolderStale
@@ -683,7 +689,7 @@
     }
 
     try {
-      const folder = await withRetry(() => dir.getDirectoryHandle('_关注列表', { create: true }), '打开_关注列表文件夹');
+      const folder = await withRetry(() => dir.getDirectoryHandle('关注列表', { create: true }), '打开关注列表文件夹');
 
       await withRetry(async () => {
         const handle = await folder.getFileHandle('关注列表.json', { create: true });
@@ -708,7 +714,7 @@
         await writable.close();
       }, '写关注列表.md');
 
-      setStatus(`✅ 完成\n共抓到 ${list.length} 个关注账号\n存到 ${dir.name}/_关注列表/关注列表.json 和 .md\n\n下一步：点④开始批量抓取内容样本`);
+      setStatus(`✅ 完成\n共抓到 ${list.length} 个关注账号\n存到 ${dir.name}/关注列表/关注列表.json 和 .md\n\n下一步：点④开始批量抓取内容样本`);
     } catch (err) {
       setStatus(`写入失败(${err.name || 'Error'})：${err.message}`);
     }
@@ -773,7 +779,7 @@
     }
 
     try {
-      const folder = await withRetry(() => dir.getDirectoryHandle('_关注列表', { create: true }), '打开_关注列表文件夹');
+      const folder = await withRetry(() => dir.getDirectoryHandle('关注列表', { create: true }), '打开关注列表文件夹');
       const fileHandle = await folder.getFileHandle('关注列表.json', { create: false });
       const file = await fileHandle.getFile();
       const list = JSON.parse(await file.text());
@@ -862,7 +868,7 @@
     }
 
     try {
-      const folder = await withRetry(() => dir.getDirectoryHandle('_关注列表', { create: true }), '打开_关注列表文件夹');
+      const folder = await withRetry(() => dir.getDirectoryHandle('关注列表', { create: true }), '打开关注列表文件夹');
 
       if (await alreadySampled(folder, targetHandle)) {
         setStatus(`批量抓取中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} 已抓过，跳过`);
@@ -902,7 +908,7 @@
 
       if (queue.index >= queue.handles.length) {
         clearFollowingQueue();
-        setStatus(`✅ 批量抓取全部完成，共 ${queue.handles.length} 个账号。\n存在 ${dir.name}/_关注列表/内容样本.md`);
+        setStatus(`✅ 批量抓取全部完成，共 ${queue.handles.length} 个账号。\n存在 ${dir.name}/关注列表/内容样本.md`);
         return;
       }
 
@@ -947,7 +953,7 @@
     }
 
     try {
-      const folder = await withRetry(() => dir.getDirectoryHandle('_关注列表', { create: true }), '打开_关注列表文件夹');
+      const folder = await withRetry(() => dir.getDirectoryHandle('关注列表', { create: true }), '打开关注列表文件夹');
       const fileHandle = await folder.getFileHandle('优先抓取名单.json', { create: false });
       const file = await fileHandle.getFile();
       const priority = JSON.parse(await file.text());
@@ -974,7 +980,7 @@
       await sleep(500);
       location.href = `https://x.com/${queue.handles[queue.index]}`;
     } catch (err) {
-      setStatus(`找不到优先抓取名单.json，请先在_关注列表/文件夹下放好这个文件。(${err.message})`);
+      setStatus(`找不到优先抓取名单.json，请先在关注列表/文件夹下放好这个文件。(${err.message})`);
     }
   }
 
@@ -1031,8 +1037,9 @@
         setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n没抓到这个月的推文（可能这个月没发/账号不活跃），跳过`);
       } else {
         const sourceUrl = `https://x.com/${targetHandle}`;
-        const result = await writeMerged(dir, targetHandle, queue.month, sourceUrl, tweets);
-        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n新增 ${result.added} 条，已存档`);
+        const kolDetailDir = await getKolDetailDir(dir);
+        const result = await writeMerged(kolDetailDir, targetHandle, queue.month, sourceUrl, tweets);
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n新增 ${result.added} 条，已存档到 KOL详情/${safeFileName(targetHandle)}/`);
       }
 
       // 熔断逻辑跟④一样：连续多个账号都是空/报错，大概率是被限流了，不是账号本身问题
