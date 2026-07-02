@@ -5,11 +5,12 @@
   'use strict';
 
   const APP = 'kol-signal-exporter-v1';
-  const VERSION = '2.6';
+  const VERSION = '2.7';
   const DB_NAME = 'kolSignalExportDb';
   const DB_STORE = 'handles';
   const DIR_KEY = 'kolLibraryDir';
   const FOLLOWING_QUEUE_KEY = 'kolSignalFollowingQueueV1';
+  const ARCHIVE_QUEUE_KEY = 'kolSignalArchiveQueueV1';
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   const jitterSleep = (min, max) => sleep(min + Math.random() * (max - min));
 
@@ -46,6 +47,8 @@
       <div style="border-top:1px solid #e2e8f0;margin-top:2px;padding-top:8px;font-size:11px;color:#64748b;">关注列表分析（先打开 你的handle/following 页面）</div>
       <button id="${APP}-following-btn" style="${buttonStyle('#7c3aed')}">③ 抓取当前关注列表</button>
       <button id="${APP}-sample-btn" style="${buttonStyle('#0891b2')}">④ 批量抓取关注者内容样本</button>
+      <div style="border-top:1px solid #e2e8f0;margin-top:2px;padding-top:8px;font-size:11px;color:#64748b;">核心KOL整月存档（先点①选好文件夹，且该文件夹的_关注列表/下要有 优先抓取名单.json）</div>
+      <button id="${APP}-archive-btn" style="${buttonStyle('#c2410c')}">⑤ 批量抓取优先名单整月存档</button>
       <button id="${APP}-stop-btn" style="${buttonStyle('#dc2626')}">停止</button>
       <div id="${APP}-status" style="
         display: none; max-height: 40vh; overflow: auto; white-space: pre-wrap;
@@ -61,6 +64,7 @@
     document.getElementById(`${APP}-stop-btn`).onclick = () => {
       stopRequested = true;
       clearFollowingQueue();
+      clearArchiveQueue();
       setStatus('已请求停止，等待当前操作结束…');
     };
     document.getElementById(`${APP}-run-btn`).onclick = () => {
@@ -75,9 +79,14 @@
       stopRequested = false;
       handleStartBatchSample();
     };
+    document.getElementById(`${APP}-archive-btn`).onclick = () => {
+      stopRequested = false;
+      handleStartPriorityArchive();
+    };
 
     console.log(`[KOL Signal导出器] v${VERSION} ready`, location.href);
     setTimeout(resumeFollowingQueueIfNeeded, 900);
+    setTimeout(() => resumeArchiveQueueIfNeeded(() => stopRequested), 900);
   }
 
   function clearExistingUi() {
@@ -907,6 +916,154 @@
       location.href = `https://x.com/${queue.handles[queue.index]}`;
     } catch (err) {
       setStatus(`批量抓取第${queue.index + 1}个(@${targetHandle})出错(${err.name || 'Error'})：${err.message}\n点④可以重新触发继续（会跳过已经抓过的）。`);
+    }
+  }
+
+  // ---------- 批量抓取优先名单整月存档（复用②的整月抓取逻辑，跨页面导航模式同④） ----------
+
+  function loadArchiveQueue() {
+    try {
+      return JSON.parse(localStorage.getItem(ARCHIVE_QUEUE_KEY) || 'null');
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function saveArchiveQueue(queue) {
+    localStorage.setItem(ARCHIVE_QUEUE_KEY, JSON.stringify(queue));
+  }
+
+  function clearArchiveQueue() {
+    localStorage.removeItem(ARCHIVE_QUEUE_KEY);
+  }
+
+  async function handleStartPriorityArchive() {
+    let dir;
+    try {
+      dir = await chooseKolLibraryDir();
+    } catch (err) {
+      setStatus(`未选择文件夹：${err.message}`);
+      return;
+    }
+
+    try {
+      const folder = await withRetry(() => dir.getDirectoryHandle('_关注列表', { create: true }), '打开_关注列表文件夹');
+      const fileHandle = await folder.getFileHandle('优先抓取名单.json', { create: false });
+      const file = await fileHandle.getFile();
+      const priority = JSON.parse(await file.text());
+
+      if (!priority.handles || !priority.handles.length) {
+        setStatus('优先抓取名单.json里没有handles——检查文件内容。');
+        return;
+      }
+      if (!/^\d{4}-\d{2}$/.test(priority.target_month || '')) {
+        setStatus('优先抓取名单.json里的target_month格式不对，应为YYYY-MM，例如2026-06。');
+        return;
+      }
+
+      const existing = loadArchiveQueue();
+      const canResume = existing && existing.handles?.length === priority.handles.length
+        && existing.month === priority.target_month && existing.index < existing.handles.length;
+      const queue = canResume
+        ? { ...existing, active: true, consecutiveEmpty: 0 }
+        : { active: true, index: 0, handles: priority.handles, month: priority.target_month, consecutiveEmpty: 0 };
+      saveArchiveQueue(queue);
+      setStatus(canResume
+        ? `继续批量整月存档，从第 ${queue.index + 1}/${queue.handles.length} 个开始…`
+        : `已建立批量整月存档队列，共 ${queue.handles.length} 个账号，目标月份 ${queue.month}，即将开始跳转…`);
+      await sleep(500);
+      location.href = `https://x.com/${queue.handles[queue.index]}`;
+    } catch (err) {
+      setStatus(`找不到优先抓取名单.json，请先在_关注列表/文件夹下放好这个文件。(${err.message})`);
+    }
+  }
+
+  async function resumeArchiveQueueIfNeeded(isStopped) {
+    const queue = loadArchiveQueue();
+    if (!queue?.active) return;
+
+    if (queue.index >= queue.handles.length) {
+      clearArchiveQueue();
+      setStatus(`✅ 批量整月存档全部完成，共 ${queue.handles.length} 个账号。`);
+      return;
+    }
+
+    const targetHandle = queue.handles[queue.index];
+    const currentHandle = guessHandleFromUrl();
+
+    if (currentHandle.toLowerCase() !== targetHandle.toLowerCase()) {
+      setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle}\n正在跳转…`);
+      location.href = `https://x.com/${targetHandle}`;
+      return;
+    }
+
+    let dir;
+    try {
+      dir = await getStoredDir();
+      if (!dir || await ensureDirPermission(dir, false) !== 'granted') {
+        setStatus('文件夹授权失效了——点一下「①选择/确认 KOL情报库 文件夹」重新授权后，再点⑤继续批量整月存档（队列进度不会丢）。');
+        return;
+      }
+    } catch (err) {
+      setStatus(`读取文件夹失败：${err.message}——点①重新授权后再点⑤继续。`);
+      return;
+    }
+
+    let tweets = [];
+    try {
+      await jitterSleep(2500, 4200); // 等页面渲染出推文
+
+      const loadError = await tryRecoverFromLoadError();
+      const [y, m] = queue.month.split('-').map(Number);
+      const monthStart = new Date(y, m - 1, 1, 0, 0, 0);
+      const monthEnd = new Date(y, m, 0, 23, 59, 59);
+
+      if (!loadError) {
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n正在滚动加载…`);
+        tweets = await scrollAndCollect(monthStart, monthEnd, isStopped, (count, round) => {
+          setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n已抓取 ${count} 条推文（滚动第${round + 1}轮）…`);
+        });
+      }
+
+      if (loadError) {
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle}\n页面加载报错（疑似限流），跳过本次，之后可单独重跑`);
+      } else if (tweets.length === 0) {
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n没抓到这个月的推文（可能这个月没发/账号不活跃），跳过`);
+      } else {
+        const sourceUrl = `https://x.com/${targetHandle}`;
+        const result = await writeMerged(dir, targetHandle, queue.month, sourceUrl, tweets);
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n新增 ${result.added} 条，已存档`);
+      }
+
+      // 熔断逻辑跟④一样：连续多个账号都是空/报错，大概率是被限流了，不是账号本身问题
+      queue.consecutiveEmpty = (loadError || tweets.length === 0) ? (queue.consecutiveEmpty || 0) + 1 : 0;
+      const EMPTY_CIRCUIT_BREAKER = 5;
+      if (queue.consecutiveEmpty >= EMPTY_CIRCUIT_BREAKER) {
+        queue.active = false;
+        saveArchiveQueue(queue);
+        setStatus(`⚠️ 已暂停：连续 ${EMPTY_CIRCUIT_BREAKER} 个账号都没抓到内容，大概率是被限流了，不是账号真的都没内容。\n建议歇久一点（1小时以上）再点⑤恢复——进度停在第 ${queue.index + 1}/${queue.handles.length} 个（@${targetHandle}），不会丢。`);
+        return;
+      }
+
+      queue.index += 1;
+      saveArchiveQueue(queue);
+
+      if (queue.index >= queue.handles.length) {
+        clearArchiveQueue();
+        setStatus(`✅ 批量整月存档全部完成，共 ${queue.handles.length} 个账号。`);
+        return;
+      }
+
+      // 整月抓取本身要滚很多轮，负载比④重，间隔和长休息都保守一点
+      if (queue.index % 10 === 0) {
+        setStatus(`已跑${queue.index}个账号，强制休息一下（避免被限流）…`);
+        await jitterSleep(60000, 120000);
+      } else {
+        await jitterSleep(5000, 10000);
+      }
+      location.href = `https://x.com/${queue.handles[queue.index]}`;
+    } catch (err) {
+      setStatus(`批量整月存档第${queue.index + 1}个(@${targetHandle})出错(${err.name || 'Error'})：${err.message}\n点⑤可以重新触发继续（不会丢已存的部分）。`);
     }
   }
 })();
