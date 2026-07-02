@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "得到 Clippings 导出器",
-  "version": "1.56",
+  "version": "1.85",
   "description": "将得到课程文章直接导出为 Obsidian Clippings 风格 Markdown",
   "permissions": [],
   "content_scripts": [{

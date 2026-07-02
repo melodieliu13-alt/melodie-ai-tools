@@ -5,7 +5,7 @@
 
   const APP = 'dedao-md-exporter-v12';
   const LEGACY_APPS = ['dedao-md-exporter', 'dedao-md-exporter-v2', 'dedao-md-exporter-v3', 'dedao-md-exporter-v4', 'dedao-md-exporter-v5', 'dedao-md-exporter-v6', 'dedao-md-exporter-v7', 'dedao-md-exporter-v8', 'dedao-md-exporter-v9', 'dedao-md-exporter-v10', 'dedao-md-exporter-v11'];
-  const VERSION = '1.56';
+  const VERSION = '1.85';
   const ARTICLE_PREFIX = 'https://www.dedao.cn/course/article?id=';
   const QUEUE_KEY = 'dedaoMdExportQueueV12';
   const PENDING_COURSE_EXPORT_KEY = 'dedaoMdPendingCourseExportV12';
@@ -451,6 +451,18 @@
           addVisibleItems();
           if (i % 12 === 0) showStatus(`扫描左侧完整目录...\n已收集 ${items.length} 篇`);
         }
+        // Extra passes to the true bottom — scrollHeight may have grown during the
+        // loop due to lazy-loading; the fixed step count misses newly revealed items.
+        let prevHeight = scroller.scrollHeight;
+        for (let extra = 0; extra < 6; extra++) {
+          if (shouldStopExport()) break;
+          scroller.scrollTop = 999999;
+          await sleep(180);
+          addVisibleItems();
+          if (scroller.scrollHeight === prevHeight) break;
+          prevHeight = scroller.scrollHeight;
+        }
+
         scroller.scrollTop = original;
       }
 
@@ -608,7 +620,7 @@
           if (rect.left < -5 || rect.left > 360) return false;
           if (rect.right < 90 || rect.right > 460) return false;
           if (rect.width < 80 || rect.width > 390) return false;
-          if (rect.height < 24 || rect.height > 150) return false;
+          if (rect.height < 24) return false; // no upper bound — video-thumbnail items can exceed 280 px
           if (text.length < 4 || text.length > 220) return false;
           if (el.querySelectorAll('li, [class*="item"], [class*="lesson"], [class*="article"]').length > 3) return false;
           return isSidebarLessonElement(el, text);
@@ -677,6 +689,9 @@
     if (/我的学习|知识城邦|账户充值|得到一下|设置文本|收起目录|已更新|加载中|写留言|发布留言/.test(value)) return false;
     if (/^筛选[▾▴▲▼]?$/.test(value)) return false;
     if (/^\D{0,8}\(\d{1,4}讲\)$/.test(value)) return false;
+    // Also reject grouped-sidebar section headers like "06｜经济学辞典(27讲)" which start
+    // with a digit so the above pattern misses them, but they always end with (N讲).
+    if (/\(\d{1,4}讲\)\s*$/.test(value)) return false;
     return /[\u4e00-\u9fffA-Za-z0-9]/.test(value);
   }
 
@@ -830,7 +845,13 @@
   function currentArticle() {
     const id = idFromUrl(location.href);
     if (!id) return null;
-    return { id, title: getArticleTitle(), url: articleUrl(id), sources: ['current'] };
+    // Video/audio recap lessons (e.g. "\u4e32\u8bb2\u7b54\u7591") often have no lesson-specific
+    // h1/h2 on the page itself -- getArticleTitle() then falls back to scanning
+    // body text and can mistake an ordinary transcript sentence for the title.
+    // The left-nav sidebar always has the real lesson name, so grab it here too;
+    // resolveArticleTitle() prefers sidebarTitle over the page-derived title.
+    const sidebarTitle = getCurrentSidebarTitle();
+    return { id, title: getArticleTitle(), sidebarTitle, url: articleUrl(id), sources: ['current'] };
   }
 
   function assertStillOnArticle(expected, message) {
@@ -1078,7 +1099,11 @@
       const planned = !isAnchoredWalk && plannedIndex >= 0 && plannedIndex < queue.sidebarPlan.length
         ? queue.sidebarPlan[plannedIndex]
         : null;
-      const currentSidebarTitle = getCurrentSidebarTitle();
+      // v1.81: consume the sidebar title saved BEFORE navigation (reliable for audio courses
+      // where document.title is not the article title).
+      const pendingTitle = queue._pendingNextTitle ? cleanupSidebarTitle(queue._pendingNextTitle) : '';
+      if (pendingTitle) delete queue._pendingNextTitle;
+      const currentSidebarTitle = pendingTitle || getCurrentSidebarTitle();
       const article = {
         ...current,
         title: planned?.title || currentSidebarTitle || current.title || getArticleTitle(),
@@ -1109,8 +1134,8 @@
         const pageTitle = cleanupArticleTitle(actualTitle);
         const safeArticle = {
           ...article,
-          title: isGoodArticleTitle(pageTitle) ? pageTitle : article.title,
-          sidebarTitle: isGoodArticleTitle(pageTitle) ? pageTitle : article.sidebarTitle,
+          title: isGoodArticleTitle(pageTitle) ? pageTitle : (actualSidebarTitle || article.title),
+          sidebarTitle: isGoodArticleTitle(pageTitle) ? pageTitle : (actualSidebarTitle || article.sidebarTitle),
         };
         savedArticleTitle = safeArticle.sidebarTitle || safeArticle.title || savedArticleTitle;
         assertArticlePageUsable(safeArticle);
@@ -1128,7 +1153,7 @@
         if (result.status === 'renamed') queue.stats.renamed++;
         if (result.status === 'repaired') queue.stats.repaired++;
       } catch (error) {
-        const isSkippablePage = /目录列表.*不是文章正文|视频\/音频专属页/.test(error.message || '');
+        const isSkippablePage = /目录列表.*不是文章正文|视频\/音频专属页|未识别到文章标题/.test(error.message || '');
         if (isSkippablePage) {
           console.warn('[得到导出器] 跳过无正文页，继续下一篇', current.id, error.message);
           queue.stats.skipped++;
@@ -1155,7 +1180,11 @@
       // article again → infinite cycle on the same already-seen page.
       const currentOrd = getCurrentArticleOrder();
       if (currentOrd >= 0) queue.lastOrder = currentOrd;
-      const freshTitle = cleanupSidebarTitle(getCurrentSidebarTitle() || current.title || getArticleTitle());
+      // Use page title directly — getCurrentSidebarTitle() can fall back to the
+      // "上次学到" marker (which may be a different, earlier article) when the
+      // current article is not visible in the sidebar (e.g. a different module).
+      // That would set the anchor backwards and cause a reverse loop.
+      const freshTitle = cleanupSidebarTitle(getArticleTitle() || current.title || '');
       if (freshTitle && compactTitle(freshTitle)) {
         queue.lastTitle = freshTitle;
         queue.lastTitleKey = compactTitle(freshTitle);
@@ -1188,12 +1217,20 @@
 
     const nextIndex = Math.max(Number(queue.index || 0) + 1, queue.seenIds.length);
     if (isAnchoredWalk) {
+      // Primary: title-index sidebar — walks every sidebar item in DOM order,
+      // including 加餐/工具/进阶/附录 interleaved between numbered articles.
+      // Order-based search is intentionally avoided: it skips unnumbered items
+      // and finds wrong articles when numbering restarts across sections.
       target = await findAnchoredNextSidebarControl(queue);
-      targetSource = 'anchored-sidebar';
-      queue.index = queue.seenIds.length;
       if (target) {
+        targetSource = 'anchored-sidebar';
         showStatus('从当前断点向下打开下一篇...');
       }
+      // Right-rail fallback intentionally removed: "下一篇" on 加餐/辞典 articles
+      // often links to an earlier article in publication order, causing backward loops.
+      // The v1.73 height-filter fix and v1.74 title-extraction fix make sidebar
+      // navigation reliable enough that right-rail is no longer a safe fallback.
+      queue.index = queue.seenIds.length;
     } else {
       const hasPlannedNext = queue.sidebarPlan.length && nextIndex < queue.sidebarPlan.length;
       if (hasPlannedNext) {
@@ -1272,6 +1309,11 @@
       return;
     }
     let moved = await clickNavigationControlAndWait(target, current.id);
+    if (!moved && targetSource === 'right-primary') {
+      showStatus('右侧"下一篇"没有响应，改点左侧目录...');
+      const fallback = await findAnchoredNextSidebarControl(queue);
+      if (fallback) moved = await clickNavigationControlAndWait(fallback, current.id);
+    }
     if (!moved && targetSource === 'anchored-sidebar') {
       showStatus('左侧下一篇没有响应，重新从当前断点向下找一次...');
       const retryTarget = await findAnchoredNextSidebarControl(queue);
@@ -1304,7 +1346,7 @@
         moved = await clickNavigationControlAndWait(sidebarTarget, current.id);
       }
     }
-    if (!moved && targetSource !== 'right' && targetSource !== 'anchored-sidebar') {
+    if (!moved && targetSource !== 'right' && targetSource !== 'right-primary' && targetSource !== 'anchored-sidebar') {
       showStatus('左侧目录下一篇没有响应，改点右侧“下一篇”...');
       const rightTarget = findRightRailNextControl();
       if (rightTarget) {
@@ -1446,6 +1488,14 @@
     if (direct) return direct;
     if (!sidebar) return null;
 
+    // Track whether the current article was visible in the initial sidebar view.
+    // If it was visible at start but scrolls out of the virtual-scroll viewport,
+    // every item now visible is definitionally AFTER the current position — so
+    // the first non-anchor item is the correct next article (needed for unnumbered
+    // articles like 辞典11 whose order=-1, which firstVisibleItemAfterOrder skips).
+    const initialItems = getVisibleLeftLessonItems(sidebar);
+    const currentFoundInitially = findCurrentVisibleLessonIndex(initialItems, queue) >= 0;
+
     const scrollTargets = [sidebar, ...findScrollables(sidebar)]
       .filter(Boolean)
       .filter((el, idx, arr) => arr.indexOf(el) === idx)
@@ -1468,6 +1518,30 @@
         sidebar = findSidebar() || sidebar;
         direct = findAnchoredNextInVisibleSidebar(sidebar, queue);
         if (direct) return direct;
+
+        // Scroll-past detection for unnumbered articles (order=-1):
+        // if current article was visible at start but is no longer in view,
+        // return the first non-anchor visible item (it comes after current).
+        if (currentFoundInitially) {
+          const items = getVisibleLeftLessonItems(sidebar);
+          if (items.length && findCurrentVisibleLessonIndex(items, queue) < 0) {
+            const anchorKeys = new Set(queueAnchorKeys(queue));
+            for (const item of items) {
+              if (!item.el.isConnected) continue; // virtual scroll may have detached this
+              const key = compactTitle(item.text);
+              if (key && !anchorKeys.has(key)) {
+                try {
+                  const ctrl = clickableLeftSideOf(item.el);
+                  if (ctrl) {
+                    queue._pendingNextTitle = item.text;
+                    return ctrl;
+                  }
+                } catch (_) { continue; }
+              }
+            }
+          }
+        }
+
         if (scroller.scrollTop === beforeTop || scroller.scrollTop >= maxTop) {
           stalled += 1;
           if (stalled >= 2) break;
@@ -1491,14 +1565,17 @@
     const storedOrder = Number(queue.lastOrder);
     const currentOrder = Number.isFinite(storedOrder) && storedOrder >= 0 ? storedOrder : getCurrentArticleOrder();
     if (currentOrder >= 0) {
-      const firstAfterCurrent = firstVisibleItemAfterOrder(items, currentOrder);
+      const firstAfterCurrent = firstVisibleItemAfterOrder(items, currentOrder, queue);
       if (firstAfterCurrent) return firstAfterCurrent;
 
       const ordered = items
         .map(item => ({ item, order: lessonOrderFromTitle(item.text) }))
         .filter(entry => entry.order > currentOrder)
         .sort((a, b) => a.order - b.order);
-      if (ordered.length) return clickableLeftSideOf(ordered[0].item.el);
+      if (ordered.length) {
+        queue._pendingNextTitle = ordered[0].item.text;
+        return clickableLeftSideOf(ordered[0].item.el);
+      }
     }
 
     return null;
@@ -1507,8 +1584,20 @@
   function findCurrentVisibleLessonIndex(items, queue) {
     if (!items?.length) return -1;
 
-    const anchorKeys = queueAnchorKeys(queue);
-    for (const key of anchorKeys) {
+    // Search keys: lastTitle + live page signals ONLY.
+    // Do NOT include anchorTitle (always article 01, never updated) — it produces
+    // false positives when the sidebar hasn't scrolled to the current article yet,
+    // causing the walk to restart from article 02.
+    const searchKeys = [
+      queue?.lastTitle,
+      getCurrentSidebarTitle(),
+      getArticleTitle(),
+      cleanupArticleTitle(document.title || ''),
+    ]
+      .map(t => compactTitle(cleanupSidebarTitle(t || '')))
+      .filter(Boolean);
+
+    for (const key of searchKeys) {
       const index = items.findIndex(item => {
         const itemKey = compactTitle(item.text);
         return itemKey && (itemKey === key || itemKey.includes(key) || key.includes(itemKey));
@@ -1523,10 +1612,10 @@
       if (byOrder >= 0) return byOrder;
     }
 
-    const marked = items.findIndex(item => /上次学到/.test(item.el.innerText || item.el.textContent || ''));
-    if (marked >= 0) return marked;
-
-    return items.findIndex(item => /上次学到|已学完|已学\d+%/.test(item.el.innerText || item.el.textContent || ''));
+    // 上次学到 intentionally NOT used here: it marks where the user last studied
+    // in the 得到 app, which diverges from the batch-export current position and
+    // causes the walk to jump to that unrelated article.
+    return -1;
   }
 
   function firstClickableAfterVisibleIndex(items, index, queue) {
@@ -1536,18 +1625,48 @@
       const key = compactTitle(items[i].text);
       if (!key || anchorKeys.has(key)) continue;
       const clickable = clickableLeftSideOf(items[i].el);
-      if (clickable) return clickable;
+      if (clickable) {
+        if (queue) queue._pendingNextTitle = items[i].text;
+        return clickable;
+      }
     }
     return null;
   }
 
-  function firstVisibleItemAfterOrder(items, currentOrder) {
+  function firstVisibleItemAfterOrder(items, currentOrder, queue) {
     if (!items?.length || currentOrder < 0) return null;
-    const first = items.find(item => {
-      const order = lessonOrderFromTitle(item.text);
-      return order < 0 || order > currentOrder;
+
+    // Check if the sidebar has scrolled PAST the current article (no visible items
+    // at or before currentOrder). When true, every visible item is after the current
+    // position, so the very first one is the correct next article — including
+    // unnumbered 加餐/工具/进阶 items (order=-1) that come right after a numbered article.
+    const hasItemsAtOrBeforeCurrent = items.some(item => {
+      const ord = lessonOrderFromTitle(item.text);
+      return ord >= 0 && ord <= currentOrder;
     });
-    return first ? clickableLeftSideOf(first.el) : null;
+    if (!hasItemsAtOrBeforeCurrent) {
+      if (queue) queue._pendingNextTitle = items[0].text;
+      return clickableLeftSideOf(items[0].el);
+    }
+
+    // Standard: first item with order > currentOrder.
+    const byOrder = items.find(item => lessonOrderFromTitle(item.text) > currentOrder);
+    if (byOrder) {
+      if (queue) queue._pendingNextTitle = byOrder.text;
+      return clickableLeftSideOf(byOrder.el);
+    }
+
+    // Module-boundary fallback: item at index immediately after the last match for
+    // currentOrder (handles unnumbered items that follow a numbered article in DOM).
+    let lastMatchIdx = -1;
+    for (let i = 0; i < items.length; i++) {
+      if (lessonOrderFromTitle(items[i].text) === currentOrder) lastMatchIdx = i;
+    }
+    if (lastMatchIdx >= 0 && lastMatchIdx + 1 < items.length) {
+      if (queue) queue._pendingNextTitle = items[lastMatchIdx + 1].text;
+      return clickableLeftSideOf(items[lastMatchIdx + 1].el);
+    }
+    return null;
   }
 
   function queueAnchorKeys(queue) {
@@ -1718,8 +1837,27 @@
     const items = getVisibleLeftLessonItems(sidebar);
     if (!items.length) return '';
 
-    const titleKey = compactTitle(getArticleTitle());
-    if (titleKey) {
+    // Primary: match by article ID from current URL. Reliable even when the page title
+    // doesn't contain standard lesson markers (e.g. "为什么你一定要分享关系攻略?").
+    // Scans all <a> elements in each item — audio courses may use /course/audio or
+    // other URL patterns, not just /course/article.
+    const currentId = idFromUrl(location.href);
+    if (currentId) {
+      const idMatched = items.find(item => {
+        const el = item.el;
+        if (el.tagName === 'A' && (el.getAttribute('href') || '').includes(currentId)) return true;
+        return Array.from(el.querySelectorAll('a[href]')).some(a => (a.getAttribute('href') || '').includes(currentId));
+      });
+      if (idMatched) return cleanupSidebarTitle(idMatched.text);
+    }
+
+    // Fallback: title-key matching. Try both getArticleTitle() and document.title —
+    // audio courses often have the correct title only in document.title, not in h1/h2.
+    const titleKeys = [
+      compactTitle(getArticleTitle()),
+      compactTitle(cleanupArticleTitle(document.title || '')),
+    ].filter(Boolean);
+    for (const titleKey of titleKeys) {
       const matched = items.find(item => {
         const key = compactTitle(item.text);
         return key && (key.includes(titleKey) || titleKey.includes(key));
@@ -1730,8 +1868,11 @@
     const lastStudied = items.find(item => /上次学到/.test(item.el.innerText || item.el.textContent || ''));
     if (lastStudied) return cleanupSidebarTitle(lastStudied.text);
 
-    const active = items.find(item => /上次学到|已学完|已学\d+%/.test(item.el.innerText || item.el.textContent || ''));
-    return active ? cleanupSidebarTitle(active.text) : '';
+    // Do NOT fall back to 已学完 here — that returns the FIRST already-completed article
+    // (often article 01/02) when the current article is not visible in the sidebar,
+    // causing findCurrentVisibleLessonIndex to anchor at the wrong position and
+    // restart the walk from the beginning.
+    return '';
   }
 
   async function findSidebarItemByKey(targetKey) {
@@ -1873,7 +2014,7 @@
 
   function clickableLeftSideOf(el) {
     const fireAt = (target, x, y) => {
-      for (const type of ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click']) {
+      for (const type of ['pointerover', 'mouseover', 'pointermove', 'mousemove', 'pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click']) {
         const EventClass = type.startsWith('pointer') && typeof PointerEvent !== 'undefined' ? PointerEvent : MouseEvent;
         target.dispatchEvent(new EventClass(type, {
           bubbles: true,
@@ -1899,14 +2040,54 @@
       for (let i = 0; node && i < 5; i++, node = node.parentElement) {
         if (!isVisible(node)) continue;
         const rect = node.getBoundingClientRect();
-        if (rect.left > 420 || rect.width > 460 || rect.height > 180) continue;
+        if (rect.left > 420 || rect.width > 460) continue;
         targets.push(node);
       }
       return targets.filter((node, idx, arr) => arr.indexOf(node) === idx);
     };
 
+    // Extract article URL strictly from el itself or its DIRECT children only.
+    // Never use closest() — ancestor traversal finds "继续学习" / breadcrumb <a> tags
+    // that point to an earlier article (e.g. article 01), causing backward-loop bugs.
+    const extractArticleUrl = () => {
+      if (el.tagName === 'A') {
+        const href = el.getAttribute('href') || el.href || '';
+        if (href.includes('article')) {
+          const id = idFromUrl(href);
+          if (id) return articleUrl(id);
+        }
+      }
+      for (const child of Array.from(el.children || [])) {
+        if (child.tagName === 'A') {
+          const href = child.getAttribute('href') || child.href || '';
+          if (href.includes('article')) {
+            const id = idFromUrl(href);
+            if (id) return articleUrl(id);
+          }
+        }
+      }
+      return null;
+    };
+
     return {
       async activate(beforeId) {
+        // Scroll the element into view first so coordinate-based clicks land on-screen.
+        try { el.scrollIntoView({ behavior: 'instant', block: 'nearest' }); } catch (_) {}
+        await sleep(100);
+
+        // Try clicking the <a> link directly — most reliable for Vue/React SPA routing.
+        // Direct children only (same logic as extractArticleUrl): never walk the full subtree
+        // because a deeply-nested <a> may point to a different article (e.g. "继续学习" link).
+        const directLink = el.tagName === 'A' ? el
+          : Array.from(el.children || []).find(c => c.tagName === 'A' && (c.getAttribute('href') || '').includes('article'))
+            ?? el.querySelector?.('a[href*="/course/article"]');
+        if (directLink) {
+          try { directLink.click(); } catch (_) {}
+          await sleep(700);
+          if (currentIdChanged(beforeId)) return 'changed';
+        }
+
+        // Coordinate-based click simulation (pointer + mouse event sequence).
         for (const target of clickTargets()) {
           if (shouldStopExport()) return false;
           const rect = target.getBoundingClientRect();
@@ -1927,6 +2108,12 @@
             await sleep(360);
             if (currentIdChanged(beforeId)) return 'changed';
           }
+        }
+        // URL fallback: only el itself or direct children — no ancestor traversal.
+        const url = extractArticleUrl();
+        if (url && !url.includes(beforeId)) {
+          location.href = url;
+          return 'changed';
         }
         return false;
       },
@@ -1986,25 +2173,23 @@
   }
 
   function findRightRailNextControl() {
-    const points = [
-      [window.innerWidth - 28, window.innerHeight * 0.80],
-      [window.innerWidth - 56, window.innerHeight * 0.80],
-      [window.innerWidth - 34, window.innerHeight * 0.72],
-      [window.innerWidth - 70, window.innerHeight * 0.72],
-    ];
-
-    for (const [x, y] of points) {
-      let el = document.elementFromPoint(x, y);
-      for (let i = 0; el && i < 5; i++, el = el.parentElement) {
-        if (!isVisible(el)) continue;
-        if (el.closest?.(`#${APP}-panel, #${APP}-status`)) continue;
-        const text = normalizeText(el.innerText || el.textContent || el.getAttribute('aria-label') || el.getAttribute('title'));
-        const rect = el.getBoundingClientRect();
-        if (/下一篇|下一讲|下一节/.test(text)) return el;
-        if (rect.right > window.innerWidth - 120 && rect.width <= 140 && rect.height <= 140) return el;
-      }
+    // DOM text search — coordinate-based approach fails when the extension panel
+    // overlaps the target area (elementFromPoint returns panel elements instead).
+    const panelSel = `#${APP}-panel, #${APP}-status`;
+    for (const el of document.querySelectorAll('a, button, [role="button"], [role="link"]')) {
+      if (!isVisible(el)) continue;
+      if (el.closest?.(panelSel)) continue;
+      const text = normalizeText(
+        el.getAttribute('aria-label') || el.getAttribute('title') ||
+        el.innerText || el.textContent || ''
+      );
+      if (!/下一篇|下一讲|下一节/.test(text) || text.length > 15) continue;
+      const rect = el.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) continue;
+      // Must not be confined to the far-left sidebar area
+      if (rect.right < window.innerWidth * 0.35) continue;
+      return el;
     }
-
     return null;
   }
 
@@ -2044,6 +2229,9 @@
 
     const queue = loadQueue();
     if (!queue?.active) return;
+    // Only auto-resume on article pages — course/detail or other pages have no article
+    // content and no useful article sidebar, so resuming there causes wrong navigation.
+    if (!location.href.includes('/course/article')) return;
     await sleep(900);
     if (shouldStopExport()) {
       stopActiveQueue('批量导出已停止。');
@@ -2329,6 +2517,7 @@
   function isSkippableImageElement(img, src) {
     if (!src) return true;
     if (isAvatarOrPromoImageUrl(src)) return true;
+    if (isCalloutLabelIcon(img)) return true;
 
     const rect = img.getBoundingClientRect?.();
     const width = rect?.width || img.naturalWidth || Number(img.getAttribute('width')) || 0;
@@ -2346,12 +2535,24 @@
     return /avatar|head|portrait|author|user|comment|reply|face|photo/.test(scope);
   }
 
+  // Small "解释/案例/提示/小贴士" bullet-marker icons (e.g. in 薛兆丰经济学课辞典)
+  // sit right next to their own bold label text, so the label already carries
+  // the meaning — the icon is purely decorative. We detect these by adjacent
+  // text rather than measured size, because getBoundingClientRect() can read 0
+  // at extraction time (image not yet laid out during preload/scroll), which
+  // previously let them fall through as normal content images and render at
+  // full native resolution in Obsidian instead of their small on-page size.
+  function isCalloutLabelIcon(img) {
+    const scopeEl = img.closest?.('p, li, div, span') || img.parentElement;
+    const scopeText = normalizeText(scopeEl?.textContent || '').slice(0, 20);
+    return /^(解释|案例|提示|小贴士|知识点|划重点|重点|注意)[：:]/.test(scopeText);
+  }
+
   async function chooseClippingsDir() {
     if (!window.showDirectoryPicker) {
       throw new Error('当前 Chrome 不支持直接选择文件夹。请升级 Chrome，或先用 URL 提取方案。');
     }
-    const existing = await getStoredDir();
-    if (existing && await ensureDirPermission(existing, false) === 'granted') return existing;
+    // Always prompt so the user can pick any destination (Clippings, Mini MBA, etc.)
     const dir = await window.showDirectoryPicker({ id: 'dedao-clippings', mode: 'readwrite' });
     await storeDir(dir);
     return dir;
@@ -2713,12 +2914,25 @@
   function getArticleTitle() {
     const h1Candidates = Array.from(document.querySelectorAll('h1'))
       .map(el => stripDedaoSuffix(normalizeText(el.textContent)));
+
+    // Strict pass: h1 then h2 with isGoodArticleTitle.
+    // Course-name h1s like "贾宁·财务分析课" fail isGoodArticleTitle (no lesson markers),
+    // so the real article title in h2 ("03 产业链位置：...") is found instead.
+    for (const item of h1Candidates) {
+      if (!isUiOrNarrationTitle(item) && isGoodArticleTitle(item)) return item;
+    }
+    for (const el of document.querySelectorAll('h2')) {
+      const item = stripDedaoSuffix(normalizeText(el.textContent));
+      if (!isUiOrNarrationTitle(item) && isGoodArticleTitle(item)) return item;
+    }
+
+    // Lenient fallback: h1 with isPlausiblePageTitle (may return course name, but better than nothing).
     for (const item of h1Candidates) {
       if (!isUiOrNarrationTitle(item) && isPlausiblePageTitle(item)) return item;
     }
 
+    // Last resort: [class*="title"] and document.title.
     const candidates = [
-      ...Array.from(document.querySelectorAll('h2')).map(el => el.textContent),
       document.querySelector('[class*="title"]')?.textContent,
       document.title,
     ];
@@ -2764,6 +2978,9 @@
     for (const line of lines.slice(0, 20)) {
       if (isMarkdownImageLine(line) || containsUrl(line)) continue;
       const text = cleanupArticleTitle(line);
+      // Long lines ending with sentence punctuation are body paragraphs, not titles.
+      // e.g. "1. **你已经有了先发优势**，你分享出去，带进来的新的关系户...反而可以一起进步。"
+      if (text.length > 40 && /[。！]\s*$/.test(text)) continue;
       if (!isUiOrNarrationTitle(text) && isGoodArticleTitle(text)) return text;
     }
     return '';
@@ -2788,9 +3005,21 @@
     if (!value) return true;
     const simple = value.replace(/^[\-–—｜|丨\s]+|[\-–—｜|丨\s]+$/g, '').trim();
     if (!simple) return true;
-    if (/^(建议WiFi环境下播放|建议 WiFi 环境下播放|用户留言|课后作业|课堂小结|本讲小结|划重点|添加到笔记|我的留言|写留言|发布留言|发表留言|首次发布|收起目录|设置文本|香帅亲述|宁向东亲述)$/.test(simple)) return true;
+    if (/^(建议WiFi环境下播放|建议 WiFi 环境下播放|用户留言|课后作业|课堂小结|本讲小结|划重点|添加到笔记|我的留言|写留言|发布留言|发表留言|收起目录|设置文本|香帅亲述|宁向东亲述)$/.test(simple)) return true;
+    // "首次发布" caption always trails a real date (e.g. "首次发布- 2019年12月1日"),
+    // so the old exact-match rule (`^首次发布$`) never fired. This caption sits
+    // near the END of the article, right before 用户留言 — if it gets mistaken
+    // for the title, clipToCurrentArticle slices from there and the entire real
+    // body (everything before it) is silently dropped. Prefix-match instead.
+    if (/^首次发布/.test(simple)) return true;
     if (/^[\u4e00-\u9fffA-Za-z·]{2,16}(?:亲述|转述|讲述)$/.test(simple)) return true;
     if (/(?:老师|作者)?(?:亲述|转述|讲述)$/.test(simple) && simple.length <= 18) return true;
+    // "一键直达"/"猜你喜欢"/"延伸阅读"/"相关推荐" cards are cross-links to OTHER
+    // lessons embedded mid-article. They often contain a colon or pipe (e.g.
+    // "一键直达：第089讲｜比较优势原理"), which would otherwise pass the loose
+    // catch-all in isGoodArticleTitle and get mistaken for the real title —
+    // corrupting both the saved filename and clipToCurrentArticle's trim point.
+    if (/^(一键直达|猜你喜欢|延伸阅读|相关推荐|继续学习)/.test(simple)) return true;
     return false;
   }
 
@@ -2804,7 +3033,28 @@
     if (/我的学习|知识城邦|账户充值|得到一下|设置文本|收起目录|已更新|加载中/.test(value)) return false;
     if (/^筛选[▾▴▲▼]?$/.test(value)) return false;
     if (/香帅的北大金融学课$/.test(value)) return false;
-    return /发刊词|模块导读|^第?\d{1,4}讲[丨｜|]|^第[一二三四五六七八九十百千万0-9]+[讲课周天][丨｜|：:]|^\d{1,4}(?:[.．、]\s*|[｜|丨]|\s)|【?直播加餐】?|【?加餐】?|加餐|直播|问答|课件|导读|导论|结束|[：:｜|丨]/.test(value);
+    // 《XX课辞典》NN——正文标题 format (e.g. 薛兆丰经济学课辞典) uses an em-dash
+    // separator, not a colon/pipe, so it needs its own pattern rather than
+    // relying on the generic [：:｜|丨] catch-all below.
+    if (/^《[^》]+》\s*\d{1,4}\s*[——–-]/.test(value)) return true;
+    // Activity/campaign recap titles quote their theme name, e.g.
+    // "\u201c经济学季90天\u201d活动总结" — no colon/pipe/讲 marker at all, so they'd
+    // otherwise fail every pattern below and lose to a wrong mid-page caption
+    // like "首次发布- <date>" that happens to sit near the article's end.
+    if (/^["\u201c\u2018\u300c\u300e]/.test(value)) return true;
+    if (/发刊词|模块导读|^第?\d{1,4}讲[丨｜|]|^第[一二三四五六七八九十百千万0-9]+[讲课周天][丨｜|：:]|^\d{1,4}(?:[.．、]\s*|[｜|丨]|\s)|【?直播加餐】?|【?加餐】?|加餐|直播|问答|课件|导读|导论|结束/.test(value)) return true;
+    // Loose fallback for legit "\u6807\u7b7e\uff1a\u6b63\u9898" / "\u7f16\u53f7\uff5c\u6807\u9898" formats. Requires
+    // substantive text AFTER the separator -- rejects ordinary sentences that
+    // merely END with a colon to introduce a list, e.g. transcript lines like
+    // "\u6211\u53d1\u73b0\u540c\u5b66\u7684\u95ee\u9898\u96c6\u4e2d\u5728\u4e09\u4e2a\u65b9\u9762\uff1a", which previously
+    // slipped through as a "title" via firstTitleFromMarkdown and caused the
+    // real intro paragraph before it to be deleted by clipToCurrentArticle.
+    const sepMatch = value.match(/[：:｜|丨]/);
+    if (sepMatch) {
+      const after = value.slice(value.indexOf(sepMatch[0]) + 1).trim();
+      if (after.length >= 2) return true;
+    }
+    return false;
   }
 
   function isMarkdownImageLine(text) {
@@ -2820,6 +3070,7 @@
     if (!text) return '';
 
     const titleCandidates = [
+      cleanupArticleTitle(article?.sidebarTitle),
       cleanupArticleTitle(article?.title),
       cleanupArticleTitle(getArticleTitle()),
       firstTitleFromMarkdown(text),
@@ -2827,7 +3078,15 @@
 
     for (const title of titleCandidates) {
       const idx = findArticleTitleIndex(text, title);
-      if (idx > 0) {
+      // A real title only trims leading page chrome (breadcrumbs, course-name
+      // header) that sits just above the body — that's always a small prefix.
+      // Every title-detection bug seen so far (一键直达 cross-link cards,
+      // "首次发布" date captions, a 解释/案例 callout paragraph) produced a
+      // "title" that actually lives deep inside the real content; slicing at
+      // that point silently deleted most of the article. Refusing to trim past
+      // the halfway point turns those failures into "kept too much chrome"
+      // instead of "deleted the article" — a much safer failure mode.
+      if (idx > 0 && idx <= text.length * 0.5) {
         text = text.slice(idx).trim();
         break;
       }
