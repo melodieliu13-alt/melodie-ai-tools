@@ -5,7 +5,7 @@
   'use strict';
 
   const APP = 'kol-signal-exporter-v1';
-  const VERSION = '3.0';
+  const VERSION = '3.1';
   const DB_NAME = 'kolSignalExportDb';
   const DB_STORE = 'handles';
   const DIR_KEY = 'kolLibraryDir';
@@ -348,12 +348,19 @@
     const seenAnyId = new Set(); // 见过的所有推文id，不管在不在目标月份——判断"真的没有新推文在加载了"
     const seenOldIds = new Set(); // 比目标月份更早的推文id(去重)——判断"已经滚过目标月份了"
     let staleRounds = 0;
+    let recoveryUsed = false; // 卡住时只给一次长等待恢复机会，不是真的到底了，而是限流/加载慢
     const MAX_ROUNDS = 500;
-    const MAX_STALE = 8;
+    const MAX_STALE = 10;
     const MAX_OUT_OF_RANGE = 6;
 
     for (let round = 0; round < MAX_ROUNDS; round++) {
       if (isStopped()) break;
+
+      // 深度滚动请求量大，比批量采样更容易触发X的限流/页面报错——先识别报错并重试，
+      // 不要把"页面卡住加载不出来"误判成"这个月真的没内容了"
+      if (await tryRecoverFromLoadError()) {
+        await jitterSleep(5000, 9000);
+      }
 
       const expanded = expandTruncatedTweets();
       if (expanded > 0) await sleep(400);
@@ -383,11 +390,22 @@
         staleRounds += 1;
       } else {
         staleRounds = 0;
+        recoveryUsed = false; // 重新加载出内容了，恢复机会重置
       }
-      if (staleRounds >= MAX_STALE) break;
+
+      if (staleRounds >= MAX_STALE) {
+        if (!recoveryUsed) {
+          // 第一次卡住：大概率是加载慢/被轻度限流，长等一次再继续试，而不是直接判定"到底了"
+          recoveryUsed = true;
+          staleRounds = 0;
+          await jitterSleep(5000, 9000);
+          continue;
+        }
+        break; // 长等待恢复过一次还是卡住，才真的判定为到底/加载不出来了
+      }
 
       window.scrollBy(0, Math.round(window.innerHeight * 0.85));
-      await sleep(850);
+      await jitterSleep(900, 1700);
     }
 
     return Array.from(seen.values());
@@ -1072,12 +1090,13 @@
         return;
       }
 
-      // 整月抓取本身要滚很多轮，负载比④重，间隔和长休息都保守一点
-      if (queue.index % 10 === 0) {
+      // 整月抓取本身要滚很多轮，负载比④重很多——第一版每10个歇一次在第14个就熔断了，
+      // 说明间隔还是太密，改成每5个歇一次、间隔也拉长
+      if (queue.index % 5 === 0) {
         setStatus(`已跑${queue.index}个账号，强制休息一下（避免被限流）…`);
-        await jitterSleep(60000, 120000);
+        await jitterSleep(90000, 180000);
       } else {
-        await jitterSleep(5000, 10000);
+        await jitterSleep(8000, 15000);
       }
       location.href = `https://x.com/${queue.kols[queue.index].handle}`;
     } catch (err) {
