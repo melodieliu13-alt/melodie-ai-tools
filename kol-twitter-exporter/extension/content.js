@@ -5,7 +5,7 @@
   'use strict';
 
   const APP = 'kol-signal-exporter-v1';
-  const VERSION = '2.9';
+  const VERSION = '3.0';
   const DB_NAME = 'kolSignalExportDb';
   const DB_STORE = 'handles';
   const DIR_KEY = 'kolLibraryDir';
@@ -470,9 +470,12 @@
     throw wrapped;
   }
 
-  async function getKolDetailDir(dir) {
+  async function getKolDetailDir(dir, category) {
     // KOL情报库/根下分两个并列文件夹：KOL详情(实际抓到的KOL内容) + 关注列表(筛选哪些人值得抓的分析)
-    return withRetry(() => dir.getDirectoryHandle('KOL详情', { create: true }), '打开KOL详情文件夹');
+    // KOL详情下再按身份类型分文件夹(官方账号/机构投研等)，category为空时直接存KOL详情根下(手动单个抓取②没有分类信息)
+    const kolDetailDir = await withRetry(() => dir.getDirectoryHandle('KOL详情', { create: true }), '打开KOL详情文件夹');
+    if (!category) return kolDetailDir;
+    return withRetry(() => kolDetailDir.getDirectoryHandle(category, { create: true }), `打开KOL详情/${category}文件夹`);
   }
 
   async function writeMerged(dir, kolName, month, sourceUrl, newTweets) {
@@ -959,8 +962,14 @@
       const file = await fileHandle.getFile();
       const priority = JSON.parse(await file.text());
 
-      if (!priority.handles || !priority.handles.length) {
-        setStatus('优先抓取名单.json里没有handles——检查文件内容。');
+      // 支持新格式 kols:[{handle,category}]（分类存进KOL详情/[分类]/[handle]/），
+      // 兼容旧格式 handles:[字符串]（没有分类时直接存进KOL详情/[handle]/）
+      const kols = priority.kols?.length
+        ? priority.kols
+        : (priority.handles || []).map(h => ({ handle: h, category: null }));
+
+      if (!kols.length) {
+        setStatus('优先抓取名单.json里没有kols/handles——检查文件内容。');
         return;
       }
       if (!/^\d{4}-\d{2}$/.test(priority.target_month || '')) {
@@ -969,17 +978,17 @@
       }
 
       const existing = loadArchiveQueue();
-      const canResume = existing && existing.handles?.length === priority.handles.length
-        && existing.month === priority.target_month && existing.index < existing.handles.length;
+      const canResume = existing && existing.kols?.length === kols.length
+        && existing.month === priority.target_month && existing.index < existing.kols.length;
       const queue = canResume
         ? { ...existing, active: true, consecutiveEmpty: 0 }
-        : { active: true, index: 0, handles: priority.handles, month: priority.target_month, consecutiveEmpty: 0 };
+        : { active: true, index: 0, kols, month: priority.target_month, consecutiveEmpty: 0 };
       saveArchiveQueue(queue);
       setStatus(canResume
-        ? `继续批量整月存档，从第 ${queue.index + 1}/${queue.handles.length} 个开始…`
-        : `已建立批量整月存档队列，共 ${queue.handles.length} 个账号，目标月份 ${queue.month}，即将开始跳转…`);
+        ? `继续批量整月存档，从第 ${queue.index + 1}/${queue.kols.length} 个开始…`
+        : `已建立批量整月存档队列，共 ${queue.kols.length} 个账号，目标月份 ${queue.month}，即将开始跳转…`);
       await sleep(500);
-      location.href = `https://x.com/${queue.handles[queue.index]}`;
+      location.href = `https://x.com/${queue.kols[queue.index].handle}`;
     } catch (err) {
       setStatus(`找不到优先抓取名单.json，请先在关注列表/文件夹下放好这个文件。(${err.message})`);
     }
@@ -989,17 +998,17 @@
     const queue = loadArchiveQueue();
     if (!queue?.active) return;
 
-    if (queue.index >= queue.handles.length) {
+    if (queue.index >= queue.kols.length) {
       clearArchiveQueue();
-      setStatus(`✅ 批量整月存档全部完成，共 ${queue.handles.length} 个账号。`);
+      setStatus(`✅ 批量整月存档全部完成，共 ${queue.kols.length} 个账号。`);
       return;
     }
 
-    const targetHandle = queue.handles[queue.index];
+    const { handle: targetHandle, category: targetCategory } = queue.kols[queue.index];
     const currentHandle = guessHandleFromUrl();
 
     if (currentHandle.toLowerCase() !== targetHandle.toLowerCase()) {
-      setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle}\n正在跳转…`);
+      setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.kols.length} 个 @${targetHandle}\n正在跳转…`);
       location.href = `https://x.com/${targetHandle}`;
       return;
     }
@@ -1026,21 +1035,22 @@
       const monthEnd = new Date(y, m, 0, 23, 59, 59);
 
       if (!loadError) {
-        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n正在滚动加载…`);
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.kols.length} 个 @${targetHandle} ${queue.month}\n正在滚动加载…`);
         tweets = await scrollAndCollect(monthStart, monthEnd, isStopped, (count, round) => {
-          setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n已抓取 ${count} 条推文（滚动第${round + 1}轮）…`);
+          setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.kols.length} 个 @${targetHandle} ${queue.month}\n已抓取 ${count} 条推文（滚动第${round + 1}轮）…`);
         });
       }
 
       if (loadError) {
-        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle}\n页面加载报错（疑似限流），跳过本次，之后可单独重跑`);
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.kols.length} 个 @${targetHandle}\n页面加载报错（疑似限流），跳过本次，之后可单独重跑`);
       } else if (tweets.length === 0) {
-        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n没抓到这个月的推文（可能这个月没发/账号不活跃），跳过`);
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.kols.length} 个 @${targetHandle} ${queue.month}\n没抓到这个月的推文（可能这个月没发/账号不活跃），跳过`);
       } else {
         const sourceUrl = `https://x.com/${targetHandle}`;
-        const kolDetailDir = await getKolDetailDir(dir);
+        const kolDetailDir = await getKolDetailDir(dir, targetCategory);
         const result = await writeMerged(kolDetailDir, targetHandle, queue.month, sourceUrl, tweets);
-        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.handles.length} 个 @${targetHandle} ${queue.month}\n新增 ${result.added} 条，已存档到 KOL详情/${safeFileName(targetHandle)}/`);
+        const savedPath = targetCategory ? `KOL详情/${targetCategory}/${safeFileName(targetHandle)}/` : `KOL详情/${safeFileName(targetHandle)}/`;
+        setStatus(`批量整月存档中：第 ${queue.index + 1}/${queue.kols.length} 个 @${targetHandle} ${queue.month}\n新增 ${result.added} 条，已存档到 ${savedPath}`);
       }
 
       // 熔断逻辑跟④一样：连续多个账号都是空/报错，大概率是被限流了，不是账号本身问题
@@ -1049,16 +1059,16 @@
       if (queue.consecutiveEmpty >= EMPTY_CIRCUIT_BREAKER) {
         queue.active = false;
         saveArchiveQueue(queue);
-        setStatus(`⚠️ 已暂停：连续 ${EMPTY_CIRCUIT_BREAKER} 个账号都没抓到内容，大概率是被限流了，不是账号真的都没内容。\n建议歇久一点（1小时以上）再点⑤恢复——进度停在第 ${queue.index + 1}/${queue.handles.length} 个（@${targetHandle}），不会丢。`);
+        setStatus(`⚠️ 已暂停：连续 ${EMPTY_CIRCUIT_BREAKER} 个账号都没抓到内容，大概率是被限流了，不是账号真的都没内容。\n建议歇久一点（1小时以上）再点⑤恢复——进度停在第 ${queue.index + 1}/${queue.kols.length} 个（@${targetHandle}），不会丢。`);
         return;
       }
 
       queue.index += 1;
       saveArchiveQueue(queue);
 
-      if (queue.index >= queue.handles.length) {
+      if (queue.index >= queue.kols.length) {
         clearArchiveQueue();
-        setStatus(`✅ 批量整月存档全部完成，共 ${queue.handles.length} 个账号。`);
+        setStatus(`✅ 批量整月存档全部完成，共 ${queue.kols.length} 个账号。`);
         return;
       }
 
@@ -1069,7 +1079,7 @@
       } else {
         await jitterSleep(5000, 10000);
       }
-      location.href = `https://x.com/${queue.handles[queue.index]}`;
+      location.href = `https://x.com/${queue.kols[queue.index].handle}`;
     } catch (err) {
       setStatus(`批量整月存档第${queue.index + 1}个(@${targetHandle})出错(${err.name || 'Error'})：${err.message}\n点⑤可以重新触发继续（不会丢已存的部分）。`);
     }
