@@ -5,7 +5,7 @@
   'use strict';
 
   const APP = 'kol-signal-exporter-v1';
-  const VERSION = '3.3';
+  const VERSION = '3.4';
   const DB_NAME = 'kolSignalExportDb';
   const DB_STORE = 'handles';
   const DIR_KEY = 'kolLibraryDir';
