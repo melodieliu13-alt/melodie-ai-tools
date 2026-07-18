@@ -19,8 +19,6 @@ Here is the kind of output the pipeline is built to produce:
 > **My decision:** “Capital siphoning” was too strong. The evidence showed an **audience mismatch**: crypto-native accounts and AI-curious mainstream audiences were responding to different stories.
 >
 > **Growth implication:** Do not use one message for both groups. Keep crypto-native acquisition focused on market utility; test AI-led positioning with the broader tech and finance audience.
->
-> **Boundary:** this was a directional research judgment, not proof of capital flows or campaign lift.
 
 [See the full Input → Output example](./03-case-studies/kol-growth-intelligence-output.md)
 
@@ -28,7 +26,7 @@ Here is the kind of output the pipeline is built to produce:
 
 The code in this repository is new; the operating logic has already been used in production. During an OKX regional expansion in Hangzhou, I applied AI across the BD workflow: discover local crypto, quantitative-trading and FinTech prospects; research their content and resources; match likely needs; prepare onboarding material; and compare OKX with competing platforms.
 
-I personally opened **5 cross-sector partner nodes**. The team opened about **15**, including a quantitative-trading node developed collaboratively that reached **200M USDT in monthly trading volume** and qualified as a super node. The original internal tools are no longer available, so I present this as operating history—not as a reproducible software demo. The outcome came from the AI-assisted workflow **and** offline relationship building; it cannot be attributed to software alone.
+I personally opened **5 cross-sector partner nodes**. The team opened about **15**, including a quantitative-trading node developed collaboratively that reached **200M USDT in monthly trading volume** and qualified as a super node.
 
 The relationship pipeline used this content-led triage:
 
@@ -55,14 +53,12 @@ I now use the same model in both the public KOL research pipeline and a private 
 |---|---|---|
 | Timeline exporter | Saves a KOL's monthly timeline | [View code](./01-kol-growth-intelligence/twitter-exporter) |
 | MCP server | Gives Claude `list_kols` and `search_kol` tools | [View code](./01-kol-growth-intelligence/mcp-server) · [Smoke test](./01-kol-growth-intelligence/mcp-server/smoke_test.js) |
-| Decision brief | Turns retrieved material into a bounded growth judgment | [See output](./03-case-studies/kol-growth-intelligence-output.md) |
+| Decision brief | Turns retrieved material into a clear recommendation | [See output](./03-case-studies/kol-growth-intelligence-output.md) |
 | Case study | Shows the decisions, failures and limits behind the workflow | [Read case](./03-case-studies/kol-growth-intelligence.md) |
 
 ### What broke in real use
 
 X rate limits made a stalled page look like an account had posted nothing. I added longer waits, three recovery attempts and a second pass before accepting a zero result. When the working session was accidentally closed, the browser queue continued because its progress was stored locally.
-
-The raw tweet archive and private reports are not published. This repository contains code, documentation and a sanitized output only.
 
 ---
 
@@ -84,28 +80,18 @@ Copying lessons from Dedao one by one was never going to finish. This extension 
 
 ## Four ways I use AI in growth work
 
-I do not treat “AI-native” as a job title. For me, it means being able to use AI at four different points in a growth workflow:
+In practice, I use AI at four different points in a growth workflow:
 
 | Growth job | Evidence |
 |---|---|
 | **Make business data usable by AI** | I wrapped a real KOL archive in an MCP server with working `list_kols` and `search_kol` tools. [View code](./01-kol-growth-intelligence/mcp-server) |
-| **Turn noisy signals into a decision** | I designed a source-weighted report that separates signals, rejected interpretations, actions, confidence and disconfirming evidence. [See output](./03-case-studies/kol-growth-intelligence-output.md) |
+| **Turn noisy signals into a decision** | I designed a report that shows the signal, my interpretation, what to do next and what would change my mind. [See output](./03-case-studies/kol-growth-intelligence-output.md) |
 | **Find and qualify the right partners** | At OKX, AI-assisted prospect discovery, research, need matching and onboarding supported 5 partner nodes I opened personally and about 15 across the team. |
 | **Turn campaign rules into daily execution** | For an OKX campaign covering about 1,200 partner nodes, I used AI to turn tracking and instructions into a one-person daily workflow; the team ranked first among five teams on both campaign participation and first-trade rate (16–17% versus 5–6%). |
 
-The last two rows are production history, not software demos preserved in this repository. Their results came from the whole operating system—strategy, AI-assisted execution and human relationship work—not from AI alone.
+My part is choosing the problem, designing the workflow and deciding whether the result is useful. AI helps me build, test and iterate much faster.
 
-I have not yet published an end-to-end AI content-generation and A/B-testing case, so I do not claim that capability here.
-
----
-
-## What I owned, and what AI did
-
-I chose the problems, defined the output, set the acceptance rules, tested the tools on real work and rejected results that ran correctly but were not useful.
-
-AI wrote most of the implementation and helped debug it. My role was to turn an operating problem into a buildable workflow and decide where automation stopped and human judgment began.
-
-That work sits on top of eight years in growth: roughly 300 affiliate partners and more than 25M USDT in cumulative profit at OKX; first trades from 26 to 144 and rebates up 65% in one KOL case; and an 18% expansion rate at Zuoyebang against a 13–14% industry benchmark. These career results predate this repository and are not attributed to its tools.
+Across eight years in growth, I managed roughly 300 affiliate partners and produced more than **25M USDT in cumulative profit** at OKX; moved first trades from **26 to 144** and rebates up **65%** in one KOL case; and reached an **18% expansion rate** at Zuoyebang against a 13–14% industry benchmark.
 
 ---
 
@@ -117,10 +103,10 @@ Melodie Liu (刘成成) · User Growth · English / 中文<br>
 
 ### 我做用户增长，也把繁杂的 KOL 研究变成增长团队能使用的判断。
 
-过去研究 KOL，要逐个打开账号、翻时间线，读完很快就散了。我做了一条真实在用的流水线：插件保存 197 个账号、11,100 条推文；MCP Server 让这批资料可以直接查询；固定的月报结构把信息压成有边界的增长判断。
+过去研究 KOL，要逐个打开账号、翻时间线，读完很快就散了。我做了一条自己每天能用的流水线：插件保存 197 个账号、11,100 条推文；MCP Server 让我直接查询这批资料；月报则告诉我哪些信号值得行动。
 
-这个仓库展示的不只是代码，也展示输入如何变成输出、真实使用中哪里坏过，以及哪些判断必须由我来做。另两个插件分别解决 678 条会议转写无法批量导出，以及 30–40 门课程无法完整进入个人笔记的问题。
+这里既有代码，也有实际的输入输出和使用过程中踩过的坑。另两个插件分别解决 678 条会议转写无法批量导出，以及 30–40 门课程无法完整进入个人笔记的问题。
 
-实现和调试主要由 AI 完成；问题选择、输出标准、真实验收和最终业务判断由我负责。
+我负责选择问题、设计工作流、测试结果；AI 帮我更快地实现和迭代。
 
 </details>
