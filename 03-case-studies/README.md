@@ -8,7 +8,8 @@
 ## Make decisions
 
 - [KOL Partner Intelligence](./kol-growth-intelligence.md)
-- [Real sanitized MCP Input → Output](./kol-growth-intelligence-output.md)
+  - [Real sanitized MCP Input → Output](./kol-growth-intelligence-output.md)
+  - [Sanitized KOL Partner Decision Brief](./kol-partner-decision-brief.md)
 
 ## Operate at scale
 

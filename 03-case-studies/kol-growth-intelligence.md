@@ -42,7 +42,10 @@ On 2026-07-18, a real MCP call for `MiCA` in `2026-06` returned **89 matching po
 
 Retrieval is not the decision. I compare source types, reject causal claims the evidence cannot support, define the growth action and state what would change the judgment.
 
-[See the real sanitized MCP query and decision output](./kol-growth-intelligence-output.md).
+The public evidence separates two different decisions:
+
+- [the real sanitized MCP query and bounded market judgment](./kol-growth-intelligence-output.md) show retrieval and market interpretation;
+- [the KOL Partner Decision Brief](./kol-partner-decision-brief.md) shows how candidate evidence becomes an A/B/C/D partnership priority, offer and stop condition.
 
 ## 5. Visible proof
 
@@ -52,8 +55,15 @@ Retrieval is not the decision. I compare source types, reject causal claims the 
 | MCP server | [`mcp-server`](../01-kol-growth-intelligence/mcp-server) |
 | Real client test | [`smoke_test.js`](../01-kol-growth-intelligence/mcp-server/smoke_test.js) |
 | Sanitized live query | [`Input → Output`](./kol-growth-intelligence-output.md) |
+| KOL priority judgment | [`Partner Decision Brief`](./kol-partner-decision-brief.md) |
 
-The remaining visual proof item is one screenshot of the Chrome exporter running on a safe public account. Its absence does not change the code and query evidence already available here.
+### Reserved live-run screenshot position
+
+The remaining visual proof item will appear here after a real run on a safe public X account. The file location is reserved as `assets/screenshots/kol-exporter-live-run.png`; no image link or simulated screenshot is shown before the file exists.
+
+*Caption: KOL Signal exporter completing a real public-account run, with completion status and the new or cumulative item count visible.*
+
+The final crop must exclude browser avatars, bookmarks, signed-in account details and other private information.
 
 ## 6. A judgment the workflow changed
 

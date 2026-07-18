@@ -8,7 +8,7 @@ I'm Melodie Liu, a global growth operator with eight years of experience across 
 
 These are career outcomes, not results attributed to the tools in this repository.
 
-- Managed roughly **300 affiliate partners** and generated **25M+ USDT in cumulative profit** at OKX.
+- Managed a portfolio of roughly 300 affiliate partners that generated 25M+ USDT in cumulative profit at OKX.
 - Moved first trades from **26 to 144** and increased rebates **65%** in one KOL partnership case.
 - Worked across global communities and partner ecosystems in English and Chinese, including an English ZK Sync Space that helped lift weekly active bridge addresses **8%**.
 
@@ -32,9 +32,11 @@ I built a Chrome extension and a search tool that made **197 accounts and 11,100
 
 **Before → After:** repeated timeline reading → searchable evidence → source comparison → bounded growth judgment and next action.
 
-**Visible proof:** working exporter code, a live-tested MCP server, a real sanitized query result, and a decision example that shows what I accepted, rejected and changed.
+**Visible proof:** working exporter code, a live-tested MCP server, a real sanitized query result, a bounded market judgment, and a sanitized brief that shows how I prioritize a KOL partnership.
 
-[View the workflow and code](./01-kol-growth-intelligence) · [Read the case](./03-case-studies/kol-growth-intelligence.md) · [See real Input → Output](./03-case-studies/kol-growth-intelligence-output.md)
+[View the workflow and code](./01-kol-growth-intelligence) · [Read the case](./03-case-studies/kol-growth-intelligence.md) · [See real MCP Input → Output and market judgment](./03-case-studies/kol-growth-intelligence-output.md) · [See the KOL Partner Decision Brief](./03-case-studies/kol-partner-decision-brief.md)
+
+**Live-run screenshot position:** reserved here for the Chrome exporter running on a public X account, with completion status and item count visible. No placeholder image is rendered before the real screenshot exists.
 
 ## 3 · Operate at scale — 1,200-partner Campaign Operations
 
