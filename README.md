@@ -26,7 +26,11 @@ Here is the kind of output the pipeline is built to produce:
 
 ### The growth method behind it
 
-The tool is new; the operating logic is not. At OKX, I used the same content-led triage to turn a large KOL market into a relationship pipeline:
+The code in this repository is new; the operating logic has already been used in production. During an OKX regional expansion in Hangzhou, I applied AI across the BD workflow: discover local crypto, quantitative-trading and FinTech prospects; research their content and resources; match likely needs; prepare onboarding material; and compare OKX with competing platforms.
+
+I personally opened **5 cross-sector partner nodes**. The team opened about **15**, including a quantitative-trading node developed collaboratively that reached **200M USDT in monthly trading volume** and qualified as a super node. The original internal tools are no longer available, so I present this as operating history—not as a reproducible software demo. The outcome came from the AI-assisted workflow **and** offline relationship building; it cannot be attributed to software alone.
+
+The relationship pipeline used this content-led triage:
 
 | Tier | How I used it |
 |---|---|
@@ -34,7 +38,7 @@ The tool is new; the operating logic is not. At OKX, I used the same content-led
 | **B/C — develop** | Lower-stakes conversations used to test the pitch, learn objections and build future options |
 | **D — observe** | Already committed elsewhere, explicitly uninterested or low-fit; useful as market and content signals, not active targets |
 
-I now use the same model in a private JD Scout workflow: collect a noisy market, classify each opportunity by fit, protect my attention for the few A-tier conversations and compress D-tier items into market intelligence. The objects changed from KOL partners to employers; the growth skill stayed the same—**finding the right relationship to advance, and knowing what not to chase.**
+I now use the same model in both the public KOL research pipeline and a private JD Scout workflow: collect a noisy market, classify each opportunity by fit, protect my attention for the few A-tier conversations and compress D-tier items into market intelligence. The objects changed; the growth skill stayed the same—**finding the right relationship to advance, and knowing what not to chase.**
 
 ---
 

@@ -50,13 +50,17 @@ The revised judgment was **audience mismatch**. For growth work, that means test
 
 ### From market signals to relationship priorities
 
-The pipeline supports a partner-triage model I used in KOL growth at OKX:
+The pipeline supports a partner-triage model I used in KOL growth at OKX. During a regional expansion in Hangzhou, I used AI to discover prospects, research their content and resources, match likely needs, prepare onboarding material and compare competing platforms:
 
 - **A — win:** research deeply, build a tailored proposal and follow up deliberately;
 - **B/C — develop:** use lower-stakes conversations to test the pitch, learn objections and keep future options open;
 - **D — observe:** do not spend active acquisition time, but retain the account as a market and content signal.
 
-I later reused the same logic in a private JD Scout workflow. Job opportunities and KOL partners are different objects, but the operating problem is the same: collect a noisy market, qualify relationship value and reserve scarce attention for the few conversations worth advancing. I present this as evidence that the growth method transfers—not as a claim that a job-search tool has already acquired B2B customers.
+I personally opened **5 cross-sector partner nodes**; the team opened about **15**. One quantitative-trading node developed collaboratively reached **200M USDT in monthly trading volume** and qualified as a super node.
+
+The original internal tools are no longer available, so this is operating history rather than reproducible product evidence. The business outcome came from the AI-assisted workflow and offline relationship building together; I do not attribute it to software alone.
+
+I later reused the same logic in a private JD Scout workflow. Job opportunities and KOL partners are different objects, but the operating problem is the same: collect a noisy market, qualify relationship value and reserve scarce attention for the few conversations worth advancing. This shows that the method transfers; it does not claim that a job-search tool has already acquired B2B customers.
 
 ## 5. What broke in real use
 
