@@ -40,7 +40,21 @@ A smoke test is included in the repository.
 
 The archive feeds an influence-weighted monthly intelligence structure designed to surface attention shifts, emerging narratives, source agreement and accounts worth further investigation.
 
-## 4. My role versus AI
+[See a sanitized Input → Output example](./kol-growth-intelligence-output.md).
+
+## 4. A decision the workflow supported
+
+One research question was whether AI was pulling attention away from crypto. The first synthesis made the relationship sound causal. I rejected that framing: attention data could not prove capital movement, and the source pattern pointed to different audiences rather than one zero-sum audience.
+
+The revised judgment was **audience mismatch**. For growth work, that means testing separate messages for crypto-native users and AI-curious technology/finance audiences instead of treating them as one segment.
+
+## 5. What broke in real use
+
+- X rate limits made a stalled page look like a genuine zero-post result. I added longer waits, three recovery attempts and an automatic second pass before accepting zero.
+- A single followed-account list missed important people by construction. I kept a manual addition path instead of pretending automated coverage was complete.
+- The first report was a descriptive research summary. I rejected it and defined a weighted decision brief with explicit implications, confidence and disagreement.
+
+## 6. My role versus AI
 
 | I owned | AI supported |
 |---|---|
@@ -50,7 +64,7 @@ The archive feeds an influence-weighted monthly intelligence structure designed 
 | Tested real accounts and rejected bad outputs | Accelerated iterations after each failure |
 | Retained the final partnership judgment | Did not own the business decision |
 
-## 5. Evidence
+## 7. Evidence
 
 | Evidence | Location |
 |---|---|
@@ -58,10 +72,11 @@ The archive feeds an influence-weighted monthly intelligence structure designed 
 | MCP server | [`01-kol-growth-intelligence/mcp-server`](../01-kol-growth-intelligence/mcp-server) |
 | Smoke test | [`smoke_test.js`](../01-kol-growth-intelligence/mcp-server/smoke_test.js) |
 | MCP documentation | [`README.md`](../01-kol-growth-intelligence/mcp-server/README.md) |
+| Sanitized output | [`Input → Output`](./kol-growth-intelligence-output.md) |
 
 The raw KOL archive and internal report are intentionally not published because they contain collected source material and private working analysis. The code repository contains no tweet archive, meeting transcript, token or private key.
 
-## 6. Outcome and boundary
+## 8. Outcome and boundary
 
 **Outcome:** a manual research process became a searchable, repeatable intelligence workflow that I use to decide what and whom to investigate.
 
