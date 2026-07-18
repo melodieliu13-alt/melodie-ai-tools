@@ -82,6 +82,23 @@ Copying lessons from Dedao one by one was never going to finish. This extension 
 
 ---
 
+## Four ways I use AI in growth work
+
+I do not treat “AI-native” as a job title. For me, it means being able to use AI at four different points in a growth workflow:
+
+| Growth job | Evidence |
+|---|---|
+| **Make business data usable by AI** | I wrapped a real KOL archive in an MCP server with working `list_kols` and `search_kol` tools. [View code](./01-kol-growth-intelligence/mcp-server) |
+| **Turn noisy signals into a decision** | I designed a source-weighted report that separates signals, rejected interpretations, actions, confidence and disconfirming evidence. [See output](./03-case-studies/kol-growth-intelligence-output.md) |
+| **Find and qualify the right partners** | At OKX, AI-assisted prospect discovery, research, need matching and onboarding supported 5 partner nodes I opened personally and about 15 across the team. |
+| **Turn campaign rules into daily execution** | For an OKX campaign covering about 1,200 partner nodes, I used AI to turn tracking and instructions into a one-person daily workflow; the team ranked first among five teams on both campaign participation and first-trade rate (16–17% versus 5–6%). |
+
+The last two rows are production history, not software demos preserved in this repository. Their results came from the whole operating system—strategy, AI-assisted execution and human relationship work—not from AI alone.
+
+I have not yet published an end-to-end AI content-generation and A/B-testing case, so I do not claim that capability here.
+
+---
+
 ## What I owned, and what AI did
 
 I chose the problems, defined the output, set the acceptance rules, tested the tools on real work and rejected results that ran correctly but were not useful.
