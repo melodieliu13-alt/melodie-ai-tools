@@ -24,6 +24,18 @@ Here is the kind of output the pipeline is built to produce:
 
 [See the full Input → Output example](./03-case-studies/kol-growth-intelligence-output.md)
 
+### The growth method behind it
+
+The tool is new; the operating logic is not. At OKX, I used the same content-led triage to turn a large KOL market into a relationship pipeline:
+
+| Tier | How I used it |
+|---|---|
+| **A — win** | High-fit partners worth deep research, a tailored proposal and deliberate follow-up |
+| **B/C — develop** | Lower-stakes conversations used to test the pitch, learn objections and build future options |
+| **D — observe** | Already committed elsewhere, explicitly uninterested or low-fit; useful as market and content signals, not active targets |
+
+I now use the same model in a private JD Scout workflow: collect a noisy market, classify each opportunity by fit, protect my attention for the few A-tier conversations and compress D-tier items into market intelligence. The objects changed from KOL partners to employers; the growth skill stayed the same—**finding the right relationship to advance, and knowing what not to chase.**
+
 ---
 
 ## What I built

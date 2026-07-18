@@ -48,6 +48,16 @@ One research question was whether AI was pulling attention away from crypto. The
 
 The revised judgment was **audience mismatch**. For growth work, that means testing separate messages for crypto-native users and AI-curious technology/finance audiences instead of treating them as one segment.
 
+### From market signals to relationship priorities
+
+The pipeline supports a partner-triage model I used in KOL growth at OKX:
+
+- **A — win:** research deeply, build a tailored proposal and follow up deliberately;
+- **B/C — develop:** use lower-stakes conversations to test the pitch, learn objections and keep future options open;
+- **D — observe:** do not spend active acquisition time, but retain the account as a market and content signal.
+
+I later reused the same logic in a private JD Scout workflow. Job opportunities and KOL partners are different objects, but the operating problem is the same: collect a noisy market, qualify relationship value and reserve scarce attention for the few conversations worth advancing. I present this as evidence that the growth method transfers—not as a claim that a job-search tool has already acquired B2B customers.
+
 ## 5. What broke in real use
 
 - X rate limits made a stalled page look like a genuine zero-post result. I added longer waits, three recovery attempts and an automatic second pass before accepting zero.
