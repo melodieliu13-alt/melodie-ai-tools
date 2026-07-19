@@ -2,7 +2,7 @@
 
 ## Find opportunities
 
-- [OKX Partner Expansion](./okx-partner-expansion.md)
+- [Affiliate Partner Acquisition at OKX](./okx-partner-expansion.md)
 - [Reconstructed partner decision example](./okx-partner-expansion-reconstructed-example.md)
 
 ## Make decisions

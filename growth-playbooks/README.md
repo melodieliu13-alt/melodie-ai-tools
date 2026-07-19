@@ -24,7 +24,7 @@ I label each claim separately because publishing a tool does not prove that peop
    - **Applied at work — partner opportunity research.** The OKX expansion case documents how public research supported prospect selection before human outreach and relationship building.
    - **Shipped — searchable KOL evidence.** A real sanitized query shows 89 matching posts across 27 unique sources in the private research corpus.
 5. **Evidence status:** Applied at work for historical partner discovery; Shipped for the public retrieval output. Neither status claims that retrieval alone created a partnership.
-6. **Verification link / next experiment:** [OKX Partner Expansion](../03-case-studies/okx-partner-expansion.md) · [Real KOL query output](../03-case-studies/kol-growth-intelligence-output.md)
+6. **Verification link / next experiment:** [Affiliate Partner Acquisition at OKX](../03-case-studies/okx-partner-expansion.md) · [Real KOL query output](../03-case-studies/kol-growth-intelligence-output.md)
 
 ## 2 · Frame
 
@@ -55,7 +55,7 @@ I label each claim separately because publishing a tool does not prove that peop
 3. **What Melodie decides:** A/B/C/D priority, the appropriate offer, the first outreach action and what would change the decision.
 4. **Existing proof:**
    - **Shipped — callable KOL retrieval and a decision output.** Public code, a real sanitized query and a single-candidate sanitized brief show the path from evidence to priority.
-   - **Applied at work — cross-sector partner selection.** The OKX operating case records real partner expansion results while keeping AI and human contribution separate.
+   - **Applied at work — cross-sector affiliate acquisition.** The OKX operating case records real affiliate-partner acquisition results while keeping AI and human contribution separate.
 5. **Evidence status:** Shipped for research and decision support; Applied at work for historical partner selection. No current KOL partnership result is attributed to the tool.
 6. **Verification link / next experiment:** [KOL workflow and code](../01-kol-growth-intelligence/) · [KOL case](../03-case-studies/kol-growth-intelligence.md) · [OKX operating case](../03-case-studies/okx-partner-expansion.md)
 

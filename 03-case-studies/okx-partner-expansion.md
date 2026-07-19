@@ -1,4 +1,4 @@
-# Operating Case · Finding New Partner Opportunities at OKX
+# Operating Case · Affiliate Partner Acquisition at OKX
 
 ## One-line summary
 

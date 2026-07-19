@@ -12,7 +12,7 @@ These are career outcomes, not results attributed to the tools in this repositor
 - Increased monthly first trades by approximately **454%** and rebates by **65%** in one KOL partnership case.
 - Worked across global communities and partner ecosystems in English and Chinese, including an English ZK Sync Space that helped lift weekly active bridge addresses **8%**.
 
-## 1 · Find opportunities — OKX Partner Expansion
+## 1 · Find opportunities — Affiliate Partner Acquisition at OKX
 
 Regional growth had plateaued inside the same crypto circles. I reframed the problem as a partner-discovery challenge: find adjacent FinTech, quantitative-trading and cross-border-commerce communities, understand their fit, and prepare a reason for each prospect to engage.
 
