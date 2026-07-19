@@ -54,5 +54,5 @@ The campaign covered roughly 1,200 partners team-wide.
 
 ## Verification
 
-- [View the reconstructed and sanitized operating example](./campaign-operations-reconstructed-example.md)
+- [View the daily-action example](./campaign-operations-reconstructed-example.md)
 - [Return to the portfolio homepage](../README.md)

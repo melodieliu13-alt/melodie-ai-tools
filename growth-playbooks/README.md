@@ -76,7 +76,7 @@ Each claim carries its own status so shipped tools, work-applied methods and fut
 2. **What AI does:** Helps turn changing rules and daily data into repeatable scripts, summaries and action queues.
 3. **What Melodie decides:** Cadence, reward allocation, priority exceptions, suspected abuse handling and escalation.
 4. **Existing proof:**
-   - **Applied at work — campaign operations at roughly 1,200-partner coverage.** The operating case and reconstructed daily-action example show how the team moved from static rules to daily control.
+   - **Applied at work — campaign operations at roughly 1,200-partner coverage.** The operating case and daily-action example show how the team moved from static rules to daily control.
 5. **Evidence status:** Applied at work across a team campaign covering roughly 1,200 partners.
 6. **Verification link / next experiment:** [Campaign operating case](../03-case-studies/campaign-operations.md) · [Daily-action example](../03-case-studies/campaign-operations-reconstructed-example.md)
 
