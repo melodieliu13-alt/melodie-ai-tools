@@ -18,7 +18,7 @@ Regional growth had plateaued inside the same crypto circles. I reframed the pro
 
 **Before → After:** ad hoc online prospecting → AI-assisted prospect discovery and background research → partner-fit judgment → tailored onboarding and competitor comparison → offline relationship building.
 
-**Result:** I personally onboarded **5 cross-sector affiliate partners**; the team onboarded about **15**. One quantitative-trading partner developed through the team initiative later reached **200M USDT in monthly trading volume**, after I had left OKX.
+**Result:** I personally onboarded **5 cross-sector affiliate partners**; the team onboarded about **15**. One quantitative-trading partner developed through the team initiative later reached **200M USDT in monthly trading volume**.
 
 The original internal tools are no longer available. This is an operating case study, not a claim that software alone produced the result.
 
@@ -91,7 +91,7 @@ Melodie Liu (刘成成) · Global Growth · English / 中文<br>
 
 这个仓库的核心是三份增长证据：
 
-1. **找机会**：OKX 杭州拓展中，我个人拓展并开通了 5 个跨圈层 affiliate partners，团队共约 15 个。团队在这轮拓展中推进的一个量化合作伙伴，在我离开 OKX 后月交易量达到 2 亿 USDT。
+1. **找机会**：OKX 杭州拓展中，我个人拓展并开通了 5 个跨圈层 affiliate partners，团队共约 15 个；团队在这轮拓展中推进的一个量化合作伙伴，后来月交易量达到 2 亿 USDT。
 2. **做判断**：把 197 个 KOL 账号、11,100 条内容变成可查询的研究库，再由我判断该追谁、该测试什么信息、什么证据还不够。
 3. **规模化执行**：春节活动覆盖约 1,200 个合作伙伴；团队从垫底做到五组领取率、首交率双第一，首交率 16–17%，其他团队为 5–6%。
 
