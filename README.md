@@ -50,6 +50,12 @@ The historical interface is unavailable. The public example reconstructs the ope
 
 ---
 
+## How I use AI across the growth loop
+
+These three cases show the growth work I have already completed: finding opportunities, making partner decisions and operating at scale. The separate map shows how I would use AI across a wider growth loop, while distinguishing shipped proof, work-applied methods, working prototypes and next experiments. [View how I use AI across the growth loop](./growth-playbooks/).
+
+---
+
 ## Supporting tools
 
 These are secondary evidence of how I build around real operating bottlenecks. They are not presented as growth outcomes.
