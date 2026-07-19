@@ -30,27 +30,19 @@ Pure online outreach also underperformed because high-value partnerships require
 | Explain onboarding repeatedly | Prepare reusable onboarding and competitor-comparison materials |
 | Treat online outreach as the whole funnel | Use research to prepare low-pressure offline meetings and follow-up |
 
-## 4. Visible output
-
-The original internal tools and files are no longer available. Instead of recreating a fake interface, this repository provides a clearly labeled, sanitized reconstruction of the operating decision:
-
-[Prospect signal → fit → offer → next action](./okx-partner-expansion-reconstructed-example.md)
-
-The reconstruction demonstrates the method, not the appearance of the historical tool.
-
-## 5. Result
+## 4. Result
 
 - I personally onboarded **5 new cross-sector affiliate partners**.
 - The team onboarded about **15**.
 - One quantitative-trading partner developed through the team initiative later reached **200M USDT in monthly trading volume** and qualified for the highest partner tier.
 
-## 6. What broke and where the case stops
+## 5. What broke and where the case stops
 
 - Better research did not replace relationship work. The useful step was turning research into a reason to meet, then building trust offline.
 - A technically plausible partner was not automatically a priority. Resource fit, motivation and the ability to onboard users still required human judgment.
 - The **200M USDT** result belongs to a team-developed partnership. It is not attributed to one person or an AI tool alone.
 
-## 7. My role versus AI
+## 6. My role versus AI
 
 | I owned | AI supported |
 |---|---|
@@ -61,5 +53,4 @@ The reconstruction demonstrates the method, not the appearance of the historical
 
 ## Verification
 
-- [View the reconstructed and sanitized decision example](./okx-partner-expansion-reconstructed-example.md)
 - [Return to the portfolio homepage](../README.md)

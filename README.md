@@ -18,7 +18,7 @@ Regional growth had plateaued inside the same crypto circles. I reframed the pro
 
 **Result:** I personally onboarded **5 cross-sector affiliate partners**; the team onboarded about **15**. One quantitative-trading partner developed through the team initiative later reached **200M USDT in monthly trading volume**.
 
-[Read the operating case](./03-case-studies/okx-partner-expansion.md) · [See the reconstructed decision example](./03-case-studies/okx-partner-expansion-reconstructed-example.md)
+[Read the operating case](./03-case-studies/okx-partner-expansion.md)
 
 ## 2 · Make decisions — KOL Partner Intelligence
 
@@ -40,7 +40,7 @@ During OKX's 2025 Lunar New Year campaign, three activity tracks were running at
 
 **Result:** our team moved from last place to **#1 among five teams** in both claim rate and first-trade rate. First-trade rate reached **16–17%**, compared with **5–6%** for the other teams.
 
-[Read the operating case](./03-case-studies/campaign-operations.md) · [See the reconstructed daily-action example](./03-case-studies/campaign-operations-reconstructed-example.md)
+[Read the operating case](./03-case-studies/campaign-operations.md) · [See the daily-action example](./03-case-studies/campaign-operations-reconstructed-example.md)
 
 ---
 

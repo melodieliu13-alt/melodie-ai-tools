@@ -32,10 +32,10 @@ Each claim carries its own status so shipped tools, work-applied methods and fut
 2. **What AI does:** Structures research into candidate briefs, competing explanations and possible offer angles.
 3. **What Melodie decides:** The segment to pursue, the commercial logic, the evidence threshold and the condition for stopping.
 4. **Existing proof:**
-   - **Applied at work — partner-fit framing.** The reconstructed OKX example shows how market context became a partner hypothesis and first action.
+   - **Applied at work — partner-fit framing.** The OKX operating case shows how market context became a partner hypothesis and first action.
    - **Shipped — partner decision.** The sanitized KOL brief records a B-priority decision, evidence for and against, a recommended offer, an outreach action and explicit upgrade, downgrade and stop conditions.
 5. **Evidence status:** Applied at work for the historical operating method; Shipped for the public decision brief; outreach remains untested.
-6. **Verification link / next experiment:** [Reconstructed partner decision example](../03-case-studies/okx-partner-expansion-reconstructed-example.md) · [KOL Partner Decision Brief](../03-case-studies/kol-partner-decision-brief.md)
+6. **Verification link / next experiment:** [OKX operating case](../03-case-studies/okx-partner-expansion.md) · [KOL Partner Decision Brief](../03-case-studies/kol-partner-decision-brief.md)
 
 ## 3 · Produce
 
@@ -46,7 +46,7 @@ Each claim carries its own status so shipped tools, work-applied methods and fut
    - **Applied at work — operating materials.** The two OKX cases show AI-assisted onboarding, competitor comparison and one-action campaign scripts.
    - **Next experiment — external content test.** A Coinbase AgentKit content experiment is fully specified but has not been published or measured.
 5. **Evidence status:** Applied at work for historical operating materials; Next experiment for public content production and distribution.
-6. **Verification link / next experiment:** [Partner example](../03-case-studies/okx-partner-expansion-reconstructed-example.md) · [Campaign daily-action example](../03-case-studies/campaign-operations-reconstructed-example.md) · [AI Content Experiment Playbook](./ai-content-experiment-playbook.md)
+6. **Verification link / next experiment:** [OKX operating case](../03-case-studies/okx-partner-expansion.md) · [Campaign daily-action example](../03-case-studies/campaign-operations-reconstructed-example.md) · [AI Content Experiment Playbook](./ai-content-experiment-playbook.md)
 
 ## 4 · Match
 
@@ -78,7 +78,7 @@ Each claim carries its own status so shipped tools, work-applied methods and fut
 4. **Existing proof:**
    - **Applied at work — campaign operations at roughly 1,200-partner coverage.** The operating case and reconstructed daily-action example show how the team moved from static rules to daily control.
 5. **Evidence status:** Applied at work across a team campaign covering roughly 1,200 partners.
-6. **Verification link / next experiment:** [Campaign operating case](../03-case-studies/campaign-operations.md) · [Reconstructed daily-action example](../03-case-studies/campaign-operations-reconstructed-example.md)
+6. **Verification link / next experiment:** [Campaign operating case](../03-case-studies/campaign-operations.md) · [Daily-action example](../03-case-studies/campaign-operations-reconstructed-example.md)
 
 ## 7 · Measure
 
