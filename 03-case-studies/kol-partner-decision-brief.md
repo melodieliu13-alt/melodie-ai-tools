@@ -4,7 +4,7 @@
 
 This brief is derived from one real candidate reviewed in the private June 2026 archive, full-profile screening and research shortlist. The handle, post text, post IDs, audience figures and other account-specific details are omitted. The candidate evidence is real and single-candidate; the product context is generalized because no employer-specific brief is published.
 
-This is a current public proof object—not an OKX historical internal file. It does not claim that outreach, a partnership or a commercial result has already happened.
+This is a public example of my current decision process—not an historical OKX file. It does not claim that outreach, a partnership or a commercial result has already happened.
 
 ## Product context
 
@@ -41,12 +41,12 @@ This is a current public proof object—not an OKX historical internal file. It 
 
 ## A/B/C/D priority
 
-**Priority: B — run one bounded discovery and pilot; do not scale yet.**
+**Priority: B — run one focused discovery call and pilot; do not scale yet.**
 
 | Priority | Meaning |
 |---|---|
 | A | Pursue now with a tailored offer; fit and evidence are already strong. |
-| B | Run a bounded discovery or pilot; fit is plausible but one material uncertainty remains. |
+| B | Run a focused discovery call or pilot; fit is plausible but one important question remains. |
 | C | Monitor; the signal is interesting but not strong enough to spend active acquisition time. |
 | D | Do not pursue under the current product brief. |
 
@@ -66,7 +66,7 @@ Before approving a pilot, request first-party evidence for audience geography an
 
 ## What would change the decision
 
-- **Upgrade B → A:** first-party audience evidence confirms the target-user overlap; the creator uses the product and can explain a genuine use case; a bounded pilot produces the pre-agreed qualified action against its baseline.
+- **Upgrade B → A:** first-party audience evidence confirms the target-user overlap; the creator uses the product and can explain a genuine use case; a small pilot produces the agreed qualified action against its baseline.
 - **Move B → C:** the content fit remains credible, but audience intent or willingness to test the product stays unclear.
 - **Move B → D:** the audience is materially outside the target group, the creator will only accept generic exposure without using the product, or the proposed content creates a compliance or trust mismatch.
 
@@ -78,7 +78,7 @@ Stop before the pilot if audience evidence or genuine product use cannot be esta
 
 - This brief uses one real candidate, not a composite.
 - It removes identifying details and does not reproduce private posts or analysis.
-- The B priority is a current, evidence-bounded recommendation—not an objective score.
+- The B priority is a current recommendation based on limited evidence—not an objective score.
 - No outreach, partnership, conversion or revenue result is claimed.
 - Retrieval located the evidence; Melodie set the fit logic, priority, offer, action and stop condition.
 

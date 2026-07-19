@@ -22,7 +22,7 @@ The product scenario is Coinbase AgentKit. Its public documentation describes a 
 
 “Give an AI agent onchain capabilities” is a broad category promise. A developer may still be unsure what the first concrete outcome looks like, what setup is required, and whether trying it creates financial or key-management risk.
 
-This is a hypothesis to test, not a claim based on Coinbase user research. The content experiment asks whether a bounded, testnet-first outcome is more effective than an abstract category explanation at generating qualified interest in the official documentation.
+This is a hypothesis to test, not a claim based on Coinbase user research. The experiment asks whether one small, testnet-first outcome generates more qualified interest in the official documentation than an abstract explanation of AgentKit's capabilities.
 
 ## 3. Signal and content hypothesis
 
@@ -58,7 +58,7 @@ Keep the format, author account, CTA and approximate length constant. Change onl
 
 **Draft hook:**
 
-> An AI agent becomes easier to understand when it does one bounded thing onchain. Here is the public AgentKit path from a local project to a testnet wallet action—and the checks I would make before trying it.
+> An AI agent becomes easier to understand when it completes one small onchain task. Here is the public AgentKit path from a local project to a testnet wallet action—and the checks I would make before trying it.
 
 **Body outline:** expected outcome → prerequisites → official quickstart steps → testnet and key-safety boundary → official documentation CTA.
 
@@ -86,7 +86,7 @@ Before publication, Melodie must:
 4. Avoid price predictions, return claims, automated-trading promises or language that could be read as investment advice.
 5. State that AgentKit is experimental where relevant and link readers to the official documentation.
 6. State that the content is independent analysis and that Melodie has no Coinbase partnership or product-analytics access.
-7. Use AI for drafting and comparison, but keep final factual, compliance and publication decisions human-owned.
+7. Use AI for drafting and comparison, while keeping final fact-checking, compliance and publication decisions with Melodie.
 
 If a safe walkthrough would require publishing credentials, using real funds or implying product access that Melodie does not have, the experiment does not run.
 
@@ -139,7 +139,7 @@ Declare Variant A or B the stronger framing only if all conditions are met:
 
 If the minimum sample is not reached after two rounds, record **inconclusive**. Do not extend the test by silently changing the threshold.
 
-## 10. Attribution boundary
+## 10. What this experiment can—and cannot—prove
 
 This experiment can support only a claim about Melodie's content framing and qualified outbound clicks from her controlled page.
 

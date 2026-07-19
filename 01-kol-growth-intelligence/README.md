@@ -32,7 +32,6 @@ human growth decision + next action
 - A 2026-07-18 live query that returned 89 matching posts from 27 sources.
 - A sanitized decision output showing what the operator accepted, rejected and changed.
 
-One screenshot of the Chrome exporter running is still to be added. No placeholder image or reconstructed product UI is used in its place.
 
 ## Privacy boundary
 

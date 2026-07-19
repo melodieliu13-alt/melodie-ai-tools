@@ -2,7 +2,7 @@
 
 ## One-line summary
 
-I turned a complex holiday campaign into a daily operating system that helped our team move from last place to #1 among five teams in both claim rate and first-trade rate.
+I turned a complex holiday campaign into a clear daily routine that helped our team move from last place to #1 among five teams in both claim rate and first-trade rate.
 
 ## 1. The real growth job
 
@@ -12,7 +12,7 @@ The campaign covered roughly **1,200 partners**. During a seven-day holiday spri
 
 ## 2. Why the manual approach stopped scaling
 
-The campaign rules existed, but an execution system did not.
+The campaign rules existed, but the team lacked a clear way to execute them every day.
 
 - partners did not know which action mattered today;
 - BD follow-up varied by person and memory;
@@ -32,7 +32,7 @@ The campaign rules existed, but an execution system did not.
 
 ## 4. Visible output
 
-The original historical interface and internal files are unavailable. The public proof object is a clearly labeled reconstruction that shows how rules and daily signals became partner-level actions:
+The original interface and internal files are unavailable. The public example is a clearly labeled reconstruction showing how rules and daily data became partner-level actions:
 
 [Campaign rules → daily action → escalation decision](./campaign-operations-reconstructed-example.md)
 

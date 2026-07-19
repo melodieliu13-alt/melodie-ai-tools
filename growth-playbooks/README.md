@@ -1,19 +1,19 @@
 # How I Use AI Across the Growth Loop
 
-This operating model comes from the shared signals in two highly relevant role briefs: [Foresight Ventures' AI Growth role](https://mp.weixin.qq.com/s/M1tcoNIcypIYtlBFzynEQw) and [Antseer's User Growth Manager role](https://hire.rebase.network/jobs/1101.html). It is a **directional market signal**, not a statistical conclusion about the entire growth job market.
+This map draws on two roles that closely match the work I want to do: [Foresight Ventures' AI Growth role](https://mp.weixin.qq.com/s/M1tcoNIcypIYtlBFzynEQw) and [Antseer's User Growth Manager role](https://hire.rebase.network/jobs/1101.html). Together they show one emerging view of AI-enabled growth; they do not represent the entire job market.
 
-The map shows how I design a growth loop and where AI can remove research or execution bottlenecks. It does **not** imply that every stage has already produced a business result.
+The map shows where I would use AI in the growth process, what I would still decide myself and how far my evidence goes. It does **not** imply that every stage has already produced a business result.
 
 **Sense → Frame → Produce → Match → Activate → Scale → Measure → Learn → Extend**
 
-## Evidence status
+## How to read the labels
 
 - **Shipped** — public code or output that a recruiter can inspect.
-- **Applied at work** — used in real operating work; historical artifacts may be unavailable, reconstructed or sanitized.
+- **Applied at work** — used in real work; historical materials may be unavailable, reconstructed or sanitized.
 - **Working prototype** — a runnable artifact without a verified market result.
-- **Next experiment** — a defined test that has not yet produced real market evidence.
+- **Next experiment** — a defined test that has not yet produced market results.
 
-No stage receives an overall score or proficiency rating. Status attaches to each specific claim because a shipped tool does not automatically prove adoption, conversion or retention.
+I label each claim separately because publishing a tool does not prove that people adopted it—or that it improved conversion or retention.
 
 ## 1 · Sense
 
@@ -33,7 +33,7 @@ No stage receives an overall score or proficiency rating. Status attaches to eac
 3. **What Melodie decides:** The segment to pursue, the commercial logic, the evidence threshold and the condition for stopping.
 4. **Existing proof:**
    - **Applied at work — partner-fit framing.** The reconstructed OKX example shows how market context became a partner hypothesis and first action.
-   - **Shipped — bounded partner decision.** The sanitized KOL brief records a B-priority decision, evidence for and against, a recommended offer, an outreach action and explicit upgrade, downgrade and stop conditions.
+   - **Shipped — partner decision.** The sanitized KOL brief records a B-priority decision, evidence for and against, a recommended offer, an outreach action and explicit upgrade, downgrade and stop conditions.
 5. **Evidence status:** Applied at work for the historical operating method; Shipped for the public decision brief. The brief does not claim that outreach or a partnership occurred.
 6. **Verification link / next experiment:** [Reconstructed partner decision example](../03-case-studies/okx-partner-expansion-reconstructed-example.md) · [KOL Partner Decision Brief](../03-case-studies/kol-partner-decision-brief.md)
 

@@ -1,8 +1,8 @@
-# I find growth opportunities, turn signals into decisions, and operate at scale.
+# I use AI to find growth opportunities, decide which partners to pursue, and execute at scale.
 
-I'm Melodie Liu, a global growth operator with eight years of experience across education, FinTech and Web3. I use AI when research or execution stops scaling—but the work still begins with a growth problem and ends with a human decision.
+I'm Melodie Liu, a global growth operator with eight years of experience across education, FinTech and Web3. I use AI when research or execution stops scaling. It helps me find and process information; I still decide what to do.
 
-**The operating arc:** Find opportunities → Make decisions → Operate at scale
+**The work:** Find opportunities → Make decisions → Execute at scale
 
 ## Career track record
 
@@ -28,15 +28,15 @@ The original internal tools are no longer available. This is an operating case s
 
 KOL research used to mean opening profiles one by one, reading timelines and trying to remember who looked promising. That worked for ten accounts, not hundreds.
 
-I built a Chrome extension and a search tool that made **197 accounts and 11,100 posts** queryable. The system retrieves evidence; I decide what the evidence is strong enough to change.
+I built a Chrome extension and a search tool that made **197 accounts and 11,100 posts** queryable. The tool finds the relevant material; I decide whether it changes who to pursue or what to test.
 
-**Before → After:** repeated timeline reading → searchable evidence → source comparison → bounded growth judgment and next action.
+**Before → After:** repeated timeline reading → searchable evidence → source comparison → a clear recommendation and next action.
 
-**Visible proof:** working exporter code, a live-tested MCP server, a real sanitized query result, a bounded market judgment, and a sanitized brief that shows how I prioritize a KOL partnership.
+**What you can inspect:** working exporter code, a tested search server, a real sanitized query result, a market judgment I revised after reviewing the evidence, and a sanitized brief showing how I prioritize a KOL partnership.
 
 [View the workflow and code](./01-kol-growth-intelligence) · [Read the case](./03-case-studies/kol-growth-intelligence.md) · [See real MCP Input → Output and market judgment](./03-case-studies/kol-growth-intelligence-output.md) · [See the KOL Partner Decision Brief](./03-case-studies/kol-partner-decision-brief.md)
 
-## 3 · Operate at scale — 1,200-partner Campaign Operations
+## 3 · Execute at scale — 1,200-partner Campaign Operations
 
 During OKX's 2025 Lunar New Year campaign, three overlapping activity tracks created an execution problem. The campaign covered roughly **1,200 partners**; rules were complex, holiday motivation was low, and reward farming had to be controlled.
 
@@ -52,22 +52,22 @@ The historical interface is unavailable. The public example reconstructs the ope
 
 ## How I use AI across the growth loop
 
-These three cases show the growth work I have already completed: finding opportunities, making partner decisions and operating at scale. The separate map shows how I would use AI across a wider growth loop, while distinguishing shipped proof, methods applied in real work and next experiments. [View how I use AI across the growth loop](./growth-playbooks/).
+These three cases show work I have already done: finding opportunities, making partner decisions and executing at scale. A separate map explains where I use AI across the wider growth process—and clearly separates what I have built, what I have used at work and what I plan to test next. [View the growth map](./growth-playbooks/).
 
 ---
 
 ## Supporting tools
 
-These are secondary evidence of how I build around real operating bottlenecks. They are not presented as growth outcomes.
+These tools show how I remove repetitive work from jobs I actually had to do. I do not present them as growth outcomes.
 
 | Supporting tool | Manual bottleneck | Visible result |
 |---|---|---|
 | [Meeting transcript exporter](./02-workflow-automation/transcript-exporter) | No useful bulk export for a 678-recording archive | Working v0.6.1 single and batch export to structured Markdown |
 | [Course clippings exporter](./02-workflow-automation/course-clippings-exporter) | Dozens of paid courses trapped behind a one-page-at-a-time interface | Working v1.85 sync workflow with resume, repair and stop controls |
 
-## My judgment vs. AI implementation
+## What I decide—and where AI helps
 
-I choose the problem, define the business logic, set the acceptance standard, test real cases, reject weak outputs and retain the final growth decision. AI helps implement code, process repetitive work and shorten iteration cycles.
+I choose the problem, define the business logic, decide what good looks like, test real cases and reject weak outputs. AI helps me write code, process repetitive work and iterate faster. The final growth decision remains mine.
 
 The raw KOL archive, employer materials, meeting transcripts and personal working data are intentionally excluded from this public repository.
 
@@ -87,6 +87,6 @@ Melodie Liu (刘成成) · Global Growth · English / 中文<br>
 2. **做判断**：把 197 个 KOL 账号、11,100 条内容变成可查询的研究库，再由我判断该追谁、该测试什么信息、什么证据还不够。
 3. **规模化执行**：春节活动覆盖约 1,200 个节点；团队从垫底做到五组领取率、首交率双第一，首交率 16–17%，其他团队为 5–6%。
 
-两个历史 OKX 案例按 operating case study 展示。重建示例均有醒目标注，不冒充当年的内部界面或文件。
+两个 OKX 历史项目以工作案例呈现。重建示例均有醒目标注，不冒充当年的内部界面或文件。
 
 </details>

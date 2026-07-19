@@ -2,7 +2,7 @@
 
 ## One-line summary
 
-I replaced repeated KOL timeline reading with a working research workflow that makes **197 accounts and 11,100 posts** searchable, then keeps the final partnership judgment with the operator.
+I replaced repeated KOL timeline reading with a research tool that makes **197 accounts and 11,100 posts** searchable. I still make the final partnership decision.
 
 ## 1. The real growth job
 
@@ -40,11 +40,11 @@ On 2026-07-18, a real MCP call for `MiCA` in `2026-06` returned **89 matching po
 
 ### Decision support
 
-Retrieval is not the decision. I compare source types, reject causal claims the evidence cannot support, define the growth action and state what would change the judgment.
+Search results are not a decision. I compare source types, reject claims the evidence cannot support, choose the next growth action and state what would change my mind.
 
 The public evidence separates two different decisions:
 
-- [the real sanitized MCP query and bounded market judgment](./kol-growth-intelligence-output.md) show retrieval and market interpretation;
+- [the real sanitized MCP query and market judgment](./kol-growth-intelligence-output.md) show retrieval and market interpretation;
 - [the KOL Partner Decision Brief](./kol-partner-decision-brief.md) shows how candidate evidence becomes an A/B/C/D partnership priority, offer and stop condition.
 
 ## 5. Visible proof
@@ -80,10 +80,10 @@ The revised judgment was **audience mismatch**. For growth work, that means test
 | Tested real accounts and rejected weak outputs | Accelerated iterations after each failure |
 | Retained the final partnership judgment | Did not own the business decision |
 
-## Outcome and boundary
+## Result and limits
 
-**Outcome:** a manual research process became a searchable, repeatable workflow that supports partner and market decisions.
+**Result:** a manual research process became a searchable, repeatable tool for partner and market decisions.
 
-**Boundary:** the system produced retrieval and decision support, not a separately attributable revenue result. The private archive and account-level analysis are not published.
+**Limit:** the tool helps me research and decide; it does not have a separately attributable revenue result. The private archive and account-level analysis are not published.
 
 [Return to the portfolio homepage](../README.md)

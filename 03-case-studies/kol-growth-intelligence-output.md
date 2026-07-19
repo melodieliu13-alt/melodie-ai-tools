@@ -3,7 +3,7 @@
 This page contains two proof objects:
 
 1. a real MCP query run against the private production archive, published only as sanitized aggregate output;
-2. a bounded growth judgment produced from the wider research workflow.
+2. a growth judgment produced from the wider research process.
 
 No handles, post text, private notes or employer-confidential information are reproduced.
 
@@ -47,7 +47,7 @@ The raw response contained the matching handle, source category, timestamp, post
 - locate the June discussion quickly across multiple source types;
 - separate first-party platform positioning from independent interpretation;
 - identify which claims require primary regulatory verification;
-- create a bounded research queue for partner or market analysis.
+- create a focused research list for partner or market analysis.
 
 ### What it cannot do
 
