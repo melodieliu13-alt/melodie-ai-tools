@@ -54,6 +54,12 @@ The historical interface is unavailable. The public example reconstructs the ope
 
 These three cases show work I have already done: finding opportunities, making partner decisions and executing at scale. A separate map explains where I use AI across the wider growth process—and clearly separates what I have built, what I have used at work and what I plan to test next. [View the growth map](./growth-playbooks/).
 
+## How I work with AI over time
+
+My use of AI does not depend on one chat history or one agent remembering me. I built a private, portable working system that lets Claude, Codex or another capable agent recover project context, work within explicit boundaries and leave behind something the next agent can continue. I retain responsibility for goals, facts, business judgment, privacy and final review.
+
+[See how MelodieOS turns AI collaboration into a long-term working loop](./human-ai-operating-system/)
+
 ---
 
 ## Supporting tools
