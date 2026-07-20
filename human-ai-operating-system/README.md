@@ -15,7 +15,7 @@ The problem was not where to store more notes. It was how to turn a real problem
 | Managed projects | **12 (P0–P11)** |
 | Private Markdown files | **7,470** |
 | Courses processed into reusable knowledge | **45 courses / 3,391 lessons** |
-| Real health-management result | **10+ jin (5+ kg) lost** |
+| Real health-management result | **6 kg lost / body fat down 4 percentage points / still progressing** |
 
 *File counts include active working documents, source material and archives as of July 20, 2026. The numbers are public; the underlying private material is not.*
 
@@ -36,7 +36,7 @@ Each project began with a problem I was actually experiencing. The system grew b
 | **P6 · Growth Lab** | I had growth experience and methods, but needed a market I controlled where new ideas could be tested with real users and numbers. | A live experiment lab with a user, channel, offer, action, metric and review date. Unrun ideas do not count as results. | 90 |
 | **P7 · Chinese & English Expression** | My thinking often contained more than I could compress into a clear interview answer, story or English monologue. | An expression workshop that turns raw thoughts into language I can actually say aloud; it is a production line, not a study schedule. | 134 |
 | **P8 · Baize Map** | After leaving OKX, I wanted a better way to understand why capable people and organizations can produce very different outcomes. | A connected map of history, power, companies and technology that helps me recognize industry structure, organizational stage and product logic. | 1,336 |
-| **P9 · Health Management** | Energy, sleep, weight and emotional state were affecting every other project. | A feedback system built from a baseline, daily inputs, practical guardrails and weekly adjustment. It has helped me lose more than 10 jin. | 13 |
+| **P9 · Health Management** | Energy, sleep, weight and emotional state were affecting every other project. | A feedback system built from a baseline, daily inputs, practical guardrails and weekly adjustment. It has helped me lose 6 kg and reduce my body-fat rate by 4 percentage points, with the project still progressing. | 13 |
 | **P10 · Financial Management** | Career-transition choices depended on knowing how much time and risk I could responsibly carry. | A deliberately small resource dashboard answering three questions: runway, concentration risk and whether long-term study funds remain protected. | 5 |
 | **P11 · Mini MBA** | Finishing courses created a large archive, but knowledge that had to be reread was not available when a real problem appeared. | A business-knowledge API: 45 courses and 3,391 lessons were processed, checked and routed into P1–P10 by the question they can help answer. | 4,099 |
 
@@ -75,7 +75,7 @@ The projects are not twelve separate folders. They pass work to one another.
 - changed the plan when evidence or real-life capacity changed;
 - absorbed relevant course material only when it improved the current protocol.
 
-The result so far is **more than 10 jin (5 kg) lost**. The important point is not that Markdown caused weight loss. It is that I turned a personal goal into a project with clear inputs, constraints, feedback and adjustment—and kept managing it until the real-world result changed.
+The result so far is **6 kg lost and a 4-percentage-point reduction in body-fat rate**, with the project still progressing. The important point is not that Markdown caused weight loss. It is that I turned a personal goal into a project with clear inputs, constraints, feedback and adjustment—and kept managing it until the real-world result changed.
 
 ## Why this is not another Obsidian knowledge vault
 

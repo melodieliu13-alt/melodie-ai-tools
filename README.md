@@ -10,7 +10,7 @@ I use AI when research or execution stops scaling. AI helps me find and process 
 
 MelodieOS grew from practical problems: a career transition that needed a real pipeline, courses that produced notes but not action, market information that did not reliably change decisions, and health goals that needed daily feedback. Today it connects **7,470 private Markdown files** across P0–P11, routes outside knowledge into the right project and keeps the next action visible when the AI agent changes.
 
-One concrete result: P9, the health-management project, has helped me lose **10+ jin (5+ kg)** by turning a broad goal into a baseline, daily inputs, guardrails and weekly adjustment—not by relying on motivation alone.
+One concrete result: P9, the health-management project, has helped me lose **6 kg and reduce my body-fat rate by 4 percentage points**—and I am still progressing. The project turned a broad goal into a baseline, daily inputs, guardrails and weekly adjustment instead of relying on motivation alone.
 
 [See why each project exists and how the growth flywheel works →](./human-ai-operating-system/)
 
