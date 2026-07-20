@@ -8,7 +8,7 @@ I use AI when research or execution stops scaling. AI helps me find and process 
 
 **I turn recurring problems into projects, experiments and measurable change.**
 
-MelodieOS is a private operating system with 12 connected project domains. P0 selects the project route for the current goal; AI agents help research and execute; I retain the facts, priorities and final judgment. Current evidence includes a managed health change of **5 kg and 3.6 body-fat percentage points**, plus a market-intelligence asset covering **197 accounts and 11,100 posts**.
+MelodieOS is a private operating system with 12 connected project domains. P0 selects the project route for the current goal; AI agents help research and execute; I retain the facts, priorities and final judgment. Current evidence includes a market-intelligence asset covering **197 accounts and 11,100 posts**, scoped growth experiments with explicit stop conditions, and a public evidence system that separates completed work from future tests.
 
 [See how I dynamically route projects, evidence and feedback →](./human-ai-operating-system/)
 

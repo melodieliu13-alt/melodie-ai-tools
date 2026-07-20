@@ -4,9 +4,9 @@
 
 **MelodieOS is the system I built to turn recurring problems into projects, rules, experiments and measurable change—with AI as a replaceable execution layer.**
 
-| 12 connected project domains | One continuous operating context | Measurable change |
+| 12 connected project domains | One portable operating context | Measurable change |
 |---|---|---|
-| Direction, intelligence, execution, capability and capacity | Different agents continue from the same project state; I retain the goals, facts and final judgment | Current evidence includes a 5 kg health change and a queryable asset covering 197 accounts / 11,100 posts |
+| Direction, intelligence, execution, capability and capacity | Different agents continue from the same project state; I retain the goals, facts and final judgment | Current evidence includes a 5 kg reduction in body weight, a 3.6-percentage-point decrease in body-fat rate and a queryable asset covering 197 accounts / 11,100 posts |
 
 ## 1. Why I built it
 
@@ -60,7 +60,7 @@ AI retrieves, compares, implements and handles repetition. I own the objective, 
 
 ### Sustainable capacity
 
-P9 converted “lose weight and feel better” into a baseline, daily constraints and weekly feedback. From March 21 to July 20, 2026, the recorded change is **5 kg lost and body-fat rate down 3.6 percentage points**, with the project still progressing. A vague intention became a maintained routine and measured result.
+P9 converted “lose weight and feel better” into a baseline, daily constraints and weekly feedback. From March 21 to July 20, 2026, body weight decreased by **5 kg** and body-fat rate decreased by **3.6 percentage points**, with the project still progressing. A vague intention became a maintained routine and measured result.
 
 ### Market intelligence became usable
 
@@ -77,7 +77,7 @@ GitHub is a selective public-evidence outlet of MelodieOS, not a gallery in whic
 ### The system also removes work
 
 - P4 had 11 course sets and 1,339 lines of playbook but only one real use in 21 days. The rule changed: stop adding frameworks; move one relationship.
-- P8 expanded for 23 days without a real analysis. A live case became the new priority and corrected the system's own stale verification status.
+- P8 accumulated structure for 23 days without completing an external-facing analysis. A live case then replaced further framework-building as the priority and corrected the system's own stale verification status.
 - P6 had several parallel growth directions. They were reduced to one controlled experiment, with early attempts kept manual until reality justifies automation.
 
 These corrections show the ability to pause, simplify, reject and move resources when evidence does not justify the structure.
